@@ -8,16 +8,21 @@ SRC		= main.c check_c_e_p.c print_map.c \
 
 SRC		:= $(addprefix src/, $(SRC))
 
-LIBFT	= ./libft/libft.a
+LIBFT	= ./libft/
 
-$(NAME): all
+LIB		= ./libft/libft.a
 
-$(NAME):
-	$(CC) -o $@ $(LIBFT) $(CFLAGS) $(SRC)
+all: $(NAME)
+
+$(LIB):
+	make -C $(LIBFT)
+$(NAME): $(SRC)
+	$(CC) -o $@ $(CFLAGS) $(SRC) $(LIB)
 clean:
-	$(RM)
+	make clean -C $(LIBFT)
 fclean:
+	make fclean -C $(LIBFT)
 	$(RM) $(NAME)
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re LIB
