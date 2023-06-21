@@ -6,15 +6,11 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/17 19:28:47 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/21 19:22:49 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
-#include <mlx.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "../libft/libft.h"
 
 int	key_hook(int keycode, void *param);
 
@@ -24,6 +20,7 @@ int	key_hook(int keycode, void *param);
  *	TODO: The map has 1 exit, 1 player and at least 1 collectible. - DONE
  *	TODO: The map must be rectangular. - DONE
  *	TODO: The map must be closed/surrounded by walls. - DONE
+ *	TODO: Valid player path to exit.
  *
  * */
 
@@ -49,38 +46,52 @@ typedef struct s_vector
 	int	y;
 } t_vector;
 
+typedef struct s_player
+{
+	int	img_width;
+	int	img_height;
+	void	*img;
+	t_vector position;
+} t_player;
+
 typedef struct s_game
 {
-	// player move count
-	size_t	move_count;
+	size_t	count_move;
+	int	count_collectible;
 	int	img_width;
 	int	img_height;
 	int	screen_width;
 	int	screen_height;
 	void	*mlx;
 	void	*win;
-	void	*img;
-	void	*p_img;
-	char	*map[256];
-	t_vector player;
-	t_vector exit;
+	void	*wall;
+	void	*collectible;
+	void	*space;
+	void	*exit;
+	void	*enemy;
+	char	**map;
+	t_player player;
+	t_vector exit_pos;
 } t_game;
+
 
 enum e_keys
 {
-	A = 0X0,		// 0
-	S = 0X1,		// 1
-	D = 0X2,		// 2
-	W = 0Xd,		// 13
-	EXIT = 0X35,	// 53
+	A 	= 0X0,		// 0
+	S 	= 0X1,		// 1
+	D 	= 0X2,		// 2
+	W 	= 0Xd,		// 13
+	ESC = 0X35,		// 53
 };
 
 enum e_colors
 {
-	RED = 0XFF0000,
-	BLUE = 0X0000FF,
-	DARK = 0X181818,
-	WHITE = 0XFFFFFF,
+	RED		= 0XFF0000,
+	GREEN	= 0X00FF00,
+	BLUE 	= 0X0000FF,
+	DARK 	= 0X181818,
+	YELLOW	= 0XFFF26E,
+	WHITE	= 0XFFFFFF,
 };
 
 // 0 for an empty space,
@@ -115,98 +126,84 @@ void	get_pos(t_game *game, int size)
 		{
 			if (game->map[y][x] == 'P')
 			{
-				game->player.x = x;
-				game->player.y = y;
+				game->player.position.x = x;
+				game->player.position.y = y;
 			}
 			else if (game->map[y][x] == 'E')
 			{
-				game->exit.x = x;
-				game->exit.y = y;
+				game->exit_pos.x = x;
+				game->exit_pos.y = y;
 			}
 		}
 	}
 }
 
+#define PUT_IMAGE(img) mlx_put_image_to_window(game->mlx, game->win, img, img_width * x, img_height * y)
 
-
-int	mouse_hook(int button, int x, int y)
+void	render_game(t_game *game)
 {
-	(void)button;
-	(void)x;
-	(void)y;
+	int	img_width = game->img_width;
+	int	img_height = game->img_height;
+	size_t	width = (game->screen_width / img_width);
+	size_t	height = (game->screen_height / img_height);
+	size_t	y = -1;
+	size_t	x;
 
-	printf("not impelemted yet!\n");
-	return (0);
-}
-
-void	fill_screen(t_game *game)
-{
-	for (int y = 0; y < game->screen_height; y++)
+	while (++y < height)
 	{
-		for (int x = 0; x < game->screen_width; x++)
-		{
-			mlx_pixel_put(game->mlx, game->win, x, y, 0X0);
-		}
-	}
-}
-
-// void	put_square(t_game *game)
-// {
-// 	int	height = (game->screen_height / game->)
-// 	for (int y = 0; y < game->screen_height; y++)
-// 	{
-// 		for (int x = 0; x < game->screen_width; x++)
-// 		{
-// 			if ()
-// 		}
-// 	}
-// }
-
-void	render_walls(t_game *game)
-{
-	size_t	width = (game->screen_width / game->img_width);
-	size_t	height = (game->screen_height / game->img_height);
-
-	for (size_t y = 0; y < height; y++)
-	{
-		for (size_t x = 0; x < width; x++)
+		x = -1;
+		while (++x < width)
 		{
 			if (game->map[y][x] == '1')
-				mlx_put_image_to_window(game->mlx, game->win, game->img,
-						game->img_width * x, game->img_height * y);
-		}
+				PUT_IMAGE(game->wall);
+			if (game->map[y][x] != '1')
+				PUT_IMAGE(game->space);
+			if (game->map[y][x] == 'C')
+			{
+				game->count_collectible += 1;
+				PUT_IMAGE(game->collectible);
+			}
+			if (game->map[y][x] == 'N')
+				PUT_IMAGE(game->enemy);
+			if (game->map[y][x] == 'E')
+				PUT_IMAGE(game->exit);
+		}	
 	}
 }
 
-
-int	main2()
-{
-	t_game	*game = game_init();
-
-	game->screen_width = 800;
-	game->screen_height = 800;
-
-	game->mlx = mlx_init();
-	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
-
-
-	mlx_key_hook(game->win, key_hook, game);
-
-
-
-	mlx_loop(game->mlx);
-
-	return 0;
-}
 
 void	update_player(t_game *game)
 {
-	fill_screen(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img,
-		game->player.x * game->img_width, game->player.y * game->img_height);
-	game->move_count += 1;
-	mlx_string_put(game->mlx, game->win, game->screen_width / 2, 0, WHITE, ft_itoa(game->move_count));
-	printf("Total of move: %ld\n", game->move_count);
+	char	*count;
+	int		x;
+	int		y;
+
+	x = game->player.position.x;
+	y = game->player.position.y;
+
+	if (game->map[y][x] == 'C')
+		game->count_collectible -= 1;
+
+	mlx_put_image_to_window(game->mlx, game->win, game->wall, 
+			x * game->img_width, y * game->img_height);
+	game->count_move += 1;
+	count = ft_itoa(game->count_move);
+// 	mlx_put_image_to_window(game->mlx, game->win, game->wall, (game->screen_width / 2) - 11.5, 0);
+	mlx_string_put(game->mlx, game->win, (game->screen_width / 2), 1, WHITE, count);
+	free(count);
+	printf("number of movements : %ld\n", game->count_move);
+}
+
+int	mouse_hook(int button, int x, int y, void *param)
+{
+	(void)param;
+	(void)x;
+
+	if (button == BTN_LEFT && y < 0)
+	{
+		exit(0);
+	}
+	return (0);
 }
 
 int	key_hook(int keycode, void *param)
@@ -219,44 +216,71 @@ int	key_hook(int keycode, void *param)
 	 * */
 
 	t_game *game = (t_game*)param;
-	int	y = game->player.y;
-	int	x = game->player.x;
+	int	y = game->player.position.y;
+	int	x = game->player.position.x;
 
-	if (keycode == W && game->map[y - 1][x] != '1')
+	if (keycode == W && game->map[y - 1][x] != '1') // UP
 	{
-		printf("UP\n");
-		game->player.y -= 1;
+		if (game->map[y - 1][x] == 'E' && game->count_collectible > 0)
+			return 1;
+		mlx_put_image_to_window(game->mlx, game->win, game->space, 
+				x * game->img_width, y * game->img_height);
+		game->player.position.y -= 1;
 		update_player(game);
 	}
-	if (keycode == S && game->map[y + 1][x] != '1')
+	if (keycode == S && game->map[y + 1][x] != '1') // DOWN
 	{
-		printf("DOWN\n");
-		game->player.y += 1;
+		if (game->map[y + 1][x] == 'E' && game->count_collectible > 0)
+			return 1;
+		mlx_put_image_to_window(game->mlx, game->win, game->space, 
+				x * game->img_width, y * game->img_height);
+		game->player.position.y += 1;
 		update_player(game);
 	}
-	if (keycode == A && game->map[y][x - 1] != '1')
+	if (keycode == A && game->map[y][x - 1] != '1') // LEFT
 	{
-		printf("LEFT\n");
-		game->player.x -= 1;
+		if (game->map[y][x - 1] == 'E' && game->count_collectible > 0)
+			return 1;
+		mlx_put_image_to_window(game->mlx, game->win, game->space, 
+				x * game->img_width, y * game->img_height);
+		game->player.position.x -= 1;
 		update_player(game);
 	}
-	if (keycode == D && game->map[y][x + 1] != '1')
+	if (keycode == D && game->map[y][x + 1] != '1') // RIGHT
 	{
-		printf("RIGHT\n");
-		game->player.x += 1;
+		if (game->map[y][x + 1] == 'E' && game->count_collectible > 0)
+			return 1;
+		mlx_put_image_to_window(game->mlx, game->win, game->space, 
+				x * game->img_width, y * game->img_height);
+		game->player.position.x += 1;
 		update_player(game);
 	}
-	if (keycode == EXIT)
+	if (keycode == ESC)
 		exit(0);
 	return 0;
 }
 
+void	get_images(t_game *game)
+{
 
+	game->space = mlx_xpm_file_to_image(game->mlx, "./textures/space.xpm",
+			&game->img_width, &game->img_height);
+	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
+			&game->img_width, &game->img_height);
+	game->collectible = mlx_xpm_file_to_image(game->mlx, "./textures/Cherry.xpm",
+			&game->img_width, &game->img_height);
+	game->enemy = mlx_xpm_file_to_image(game->mlx, "./textures/fire.xpm",
+			&game->img_width, &game->img_height);
+	game->exit = mlx_xpm_file_to_image(game->mlx, "./textures/exit.xpm",
+			&game->img_width, &game->img_height);
+}
 
 int	main(int argc, char **argv)
 {
+// 	atexit(find_leaks);
 	char	*file_path;
-	t_game	*game = game_init();
+	int	size;
+	t_game	*game;
 
 	file_path = argv[1];
 	if (argc != 2 || check_file_path(file_path))
@@ -265,42 +289,44 @@ int	main(int argc, char **argv)
 		return 1;
 	}
 
-	int	fd = open(file_path, O_RDONLY);
-
-	if (fd == -1)
+	game = game_init();
+	game->mlx = mlx_init();
+	game->map = get_map(file_path, &size);
+	if (game->map == NULL)
 	{
-		printf("Error: %s\n", strerror(errno));
+		printf("Error: could not read a file\n");
 		return 1;
 	}
-// 	char	*map[256];
-	int	size = 0;
 
-	while ((game->map[size] = get_next_line(fd)))
-		size++;
-	game->map[size] = NULL;
 
 	print_map(game->map);
 
 	get_pos(game, size);
+	
 
+// 	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
+// 			&game->img_width, &game->img_height);
+// 	game->space = mlx_xpm_file_to_image(game->mlx, "./textures/space.xpm", &game->img_width, &game->img_height);
 
-	game->mlx = mlx_init();
-	game->img = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm", &game->img_width, &game->img_height);
-
+	get_images(game);
 
 	game->screen_width = (ft_strlen(game->map[0]) - 1) * game->img_width;
 	game->screen_height = size * game->img_height;
 	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
 
+
 	mlx_key_hook(game->win, key_hook, game);
 
+	mlx_mouse_hook(game->win, mouse_hook, game);
+
 	print_map(game->map);
+	render_game(game);
 	
 	get_pos(game, size);
 
-	mlx_put_image_to_window(game->mlx, game->win, game->img,
-			game->player.x * game->img_width, game->player.y * game->img_height);
-	
+	mlx_put_image_to_window(game->mlx, game->win, game->wall,
+			game->player.position.x * game->img_width, game->player.position.y * game->img_height);
+
 
 	mlx_loop(game->mlx);
 	return 0;

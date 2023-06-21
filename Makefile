@@ -1,9 +1,9 @@
 NAME	= so_long
 CC		= gcc
-CFLAGS	= -Wall -Werror -Wextra -g3 -fsanitize=address -lm -lmlx -framework OpenGL -framework AppKit
+CFLAGS	= -Wall -Werror -Wextra -g3 -lm -lmlx -framework OpenGL -framework AppKit -fsanitize=address 
 RM		= rm -fr
 SRC		= main.c check_c_e_p.c print_map.c \
-		  check_file_path.c check_walls.c
+		  check_file_path.c check_walls.c get_map.c
 
 
 SRC		:= $(addprefix src/, $(SRC))
@@ -12,7 +12,7 @@ LIBFT	= ./libft/
 
 LIB		= ./libft/libft.a
 
-all: $(NAME)
+all: $(LIB) $(NAME)
 
 $(LIB):
 	make -C $(LIBFT)
