@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 19:24:56 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 20:12:51 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,16 +126,15 @@ void	update_player(t_game *game)
 		game->count[2] -= 1;
 	}
 
-	printf("collectible count: %d\n", game->count[2]);
-	printf("-------------------------------\n");
-
-	mlx_put_image_to_window(game->mlx, game->win, game->wall, 
+	mlx_put_image_to_window(game->mlx, game->win, game->wall,
 			x * game->img_width, y * game->img_height);
+
 	game->count_move += 1;
 	count = ft_itoa(game->count_move);
-	mlx_string_put(game->mlx, game->win, (game->screen_width / 2), 1, WHITE, count);
-	free(count);
 	printf("number of movements : %d\n", game->count_move);
+	mlx_put_image_to_window(game->mlx, game->win, game->wall, 0, 0);
+	mlx_string_put(game->mlx, game->win, 5, 1, WHITE, count);
+	free(count);
 }
 
 int	mouse_hook(int button, int x, int y, void *param)
@@ -315,7 +314,6 @@ int	main(int argc, char **argv)
 	get_images(game);
 	game->screen_width = game->row_len * game->img_width;
 	game->screen_height = game->col_len * game->img_height;
-
 
 	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
 
