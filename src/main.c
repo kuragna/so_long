@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 14:34:28 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 19:24:56 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int	key_hook(int keycode, void *param)
 	int	y = game->player.position.y;
 	int	x = game->player.position.x;
 
-	if (keycode == W && game->map[y - 1][x] != '1') // UP
+	if (keycode == UP && game->map[y - 1][x] != '1') // UP
 	{
 		if (game->map[y - 1][x] == 'E' && game->count[2] > 0)
 			return 1;
@@ -173,7 +173,7 @@ int	key_hook(int keycode, void *param)
 		game->player.position.y -= 1;
 		update_player(game);
 	}
-	if (keycode == S && game->map[y + 1][x] != '1') // DOWN
+	if (keycode == DOWN && game->map[y + 1][x] != '1') // DOWN
 	{
 		if (game->map[y + 1][x] == 'E' && game->count[2] > 0)
 			return 1;
@@ -182,7 +182,7 @@ int	key_hook(int keycode, void *param)
 		game->player.position.y += 1;
 		update_player(game);
 	}
-	if (keycode == A && game->map[y][x - 1] != '1') // LEFT
+	if (keycode == LEFT && game->map[y][x - 1] != '1') // LEFT
 	{
 		if (game->map[y][x - 1] == 'E' && game->count[2] > 0)
 			return 1;
@@ -191,7 +191,7 @@ int	key_hook(int keycode, void *param)
 		game->player.position.x -= 1;
 		update_player(game);
 	}
-	if (keycode == D && game->map[y][x + 1] != '1') // RIGHT
+	if (keycode == RIGHT && game->map[y][x + 1] != '1') // RIGHT
 	{
 		if (game->map[y][x + 1] == 'E' && game->count[2] > 0)
 			return 1;
@@ -220,56 +220,50 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 }
 
-void	check_path(char **map, int x, int y)
+void	check_path(char **map, int x, int y, int *count)
 {
-	printf("------------------\n");
-	print_map(map);
-	if (map[y][x - 1] == 'E' || map[y][x + 1] == 'E'
-	   || map[y - 1][x] == 'E' || map[y + 1][x] == 'E')
-	{
-		printf("Player can access to exit\n");
+	if (count <= 0)
 		return ;
+	if (map[y][x] == 'E')
+	{
+		printf("here\n");
+		*count -= 1;
 	}
 	else
 	{
 		map[y][x] = '1';
-		if (map[y][x - 1] == '0')
-			check_path(map, x - 1, y);
-		if (map[y + 1][x] == '0')
-			check_path(map, x, y + 1);
-		if (map[y][x + 1] == '0')
-			check_path(map, x + 1, y);
-		if (map[y - 1][x] == '0')
-			check_path(map, x, y - 1);
+		if (map[y][x - 1] != '1')
+			check_path(map, x - 1, y, count);
+		if (map[y + 1][x] != '1')
+			check_path(map, x, y + 1, count);
+		if (map[y - 1][x] != '1')
+			check_path(map, x, y - 1, count);
+		if (map[y][x + 1] != '1')
+			check_path(map, x + 1, y, count);
 	}
 }
 
-int	main(int argc, char **argv)
+char	**map_dup(char **map, size_t size)
 {
-	if (argc != 2)
-		return 1;
+	char	**tmp;
+	size_t	i;
 
-	t_game *game = game_init();
-
-	get_map(game, argv[1]);
-	
-	print_map(game->map);
-
-	get_pos(game);
-
-	t_vector player = game->player.position;
-	t_vector exit = game->exit_pos;
-	printf("player(%d, %d)\n", player.x, player.y);
-	printf("exit(%d, %d)\n", exit.x, exit.y);
-
-	int	size = 0;
-	printf("size: %d\n", size);
-	check_path(game->map, player.x, player.y);
-
-	return 0;
+	i = 0;
+	tmp = malloc(sizeof(char*) * (size + 1));
+	if (!tmp)
+		return (NULL);
+	while (map[i])
+	{
+		tmp[i] = ft_strdup(map[i]);
+		i++;
+	}
+	tmp[i] = NULL;
+	return (tmp);
 }
 
-int	main2(int argc, char **argv)
+
+
+int	main(int argc, char **argv)
 {
 // 	atexit(find_leaks);
 
@@ -296,27 +290,29 @@ int	main2(int argc, char **argv)
 		printf("Error: invalid walls\n");
 		return (1);
 	}
-
 	if (check_c_e_p(game))
 	{
-		printf("Error: invalid player, exit or collectible\n");
+		printf("Error: no enough character\n");
 		return (1);
 	}
 
-	print_map(game->map);
 	get_pos(game);
 
-
-
-// 	int err = check_path(game->map, 
-// 			game->player.position.x, 
-// 			game->player.position.y);
-// 	printf("err: %d\n", err);
-
-	return 0;
-
+	int	count = 1;
+	char	**map = map_dup(game->map, game->col_len);
+	if (map != NULL)
+		// TODO: throw error;
+	check_path(map, 
+		game->player.position.x,
+		game->player.position.y,
+		&count);
+	ft_free(map);
+	if (count > 0)
+	{
+		printf("Error: Player could not access to exit or collectible\n");
+		return 1;
+	}
 	get_images(game);
-
 	game->screen_width = game->row_len * game->img_width;
 	game->screen_height = game->col_len * game->img_height;
 
@@ -336,5 +332,26 @@ int	main2(int argc, char **argv)
 	mlx_loop(game->mlx);
 
 	return (0);
+}
+
+int	main2(int argc, char **argv)
+{
+	if (argc != 2)
+		return 1;
+
+	t_game *game = game_init();
+
+	get_map(game, argv[1]);
+	
+	get_pos(game);
+
+	t_vector player = game->player.position;
+	t_vector exit = game->exit_pos;
+	printf("player(%d, %d)\n", player.x, player.y);
+	printf("exit(%d, %d)\n", exit.x, exit.y);
+
+	print_map(game->map);
+
+	return 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/22 20:19:53 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 18:14:28 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	check_c_e_p(t_game *game)
 	map = game->map;
 	while (++y < game->col_len - 1)
 	{
-		x = 1;
+		x = 0;
 		while (++x < game->row_len)
 		{
 			if (map[y][x] != 'E' && map[y][x] != 'P' &&

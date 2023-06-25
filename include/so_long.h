@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/22 20:28:08 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 18:44:06 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,21 @@ typedef struct s_game
 
 enum e_keys
 {
-	A 	= 0X0,		// 0	= LEFT
-	D 	= 0X2,		// 2 	= RIGHT
-	S 	= 0X1,		// 1 	= DOWN
-	W 	= 0Xd,		// 13	= UP
-	ESC = 0X35,		// 53 	= EXIT
+	LEFT	= 0x0,		// 0	= LEFT - A
+	RIGHT	= 0x2,		// 2 	= RIGHT - D
+	DOWN	= 0x1,		// 1 	= DOWN - S
+	UP		= 0xd,		// 13	= UP - W
+	ESC		= 0x35,		// 53 	= EXIT
 };
 
 enum e_colors
 {
-	RED		= 0XFF0000,
-	GREEN	= 0X00FF00,
-	BLUE 	= 0X0000FF,
-	DARK 	= 0X181818,
-	YELLOW	= 0XFFF26E,
-	WHITE	= 0XFFFFFF,
+	RED		= 0xff0000,
+	GREEN	= 0x00ff00,
+	BLUE 	= 0x0000ff,
+	DARK 	= 0x181818,
+	YELLOW	= 0xfff26e,
+	WHITE	= 0xffffff,
 };
 
 void	get_map(t_game *game, const char *file_path);
