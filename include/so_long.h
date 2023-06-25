@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 18:44:06 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 20:29:17 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 # include <fcntl.h>
 # include <string.h>
 # include "../libft/libft.h"
+
+#define COLLECT 'C'
+#define PLAYER 'P'
+#define EXIT 'E'
+#define SPACE '0'
+#define WALL '1'
 
 typedef struct s_vector
 {

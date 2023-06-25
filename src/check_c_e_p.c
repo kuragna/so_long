@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 18:14:28 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 20:35:29 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ int	check_c_e_p(t_game *game)
 			if (map[y][x] != 'E' && map[y][x] != 'P' &&
 					map[y][x] != 'C' && map[y][x] != '0' && map[y][x] != '1')
 				return (1);
-			if (map[y][x] == 'E')
+			if (map[y][x] == EXIT)
 				game->count[0]++;
-			else if (map[y][x] == 'P')
+			else if (map[y][x] == PLAYER)
 				game->count[1]++;
-			else if (map[y][x] == 'C')
+			else if (map[y][x] == COLLECT)
 				game->count[2]++;
 		}
 	}

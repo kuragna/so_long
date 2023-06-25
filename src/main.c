@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 20:12:51 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 20:53:47 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ void	get_pos(t_game *game)
 		int	x = 0;
 		while (++x < game->row_len)
 		{
-			if (game->map[y][x] == 'P')
+			if (game->map[y][x] == PLAYER)
 			{
 				game->player.position.x = x;
 				game->player.position.y = y;
 			}
-			else if (game->map[y][x] == 'E')
+			else if (game->map[y][x] == EXIT)
 			{
 				game->exit_pos.x = x;
 				game->exit_pos.y = y;
@@ -97,15 +97,15 @@ void	render_game(t_game *game)
 		x = -1;
 		while (++x < width)
 		{
-			if (game->map[y][x] == '1')
+			if (game->map[y][x] == WALL)
 				PUT_IMAGE(game->wall);
-			if (game->map[y][x] != '1')
+			if (game->map[y][x] != WALL)
 				PUT_IMAGE(game->space);
-			if (game->map[y][x] == 'P')
+			if (game->map[y][x] == PLAYER)
 				PUT_IMAGE(game->wall);
-			if (game->map[y][x] == 'C')
+			if (game->map[y][x] == COLLECT)
 				PUT_IMAGE(game->collectible);
-			if (game->map[y][x] == 'E')
+			if (game->map[y][x] == EXIT)
 				PUT_IMAGE(game->exit);
 		}	
 	}
@@ -120,9 +120,9 @@ void	update_player(t_game *game)
 	x = game->player.position.x;
 	y = game->player.position.y;
 
-	if (game->map[y][x] == 'C')
+	if (game->map[y][x] == COLLECT)
 	{
-		game->map[y][x] = '0';
+		game->map[y][x] = SPACE;
 		game->count[2] -= 1;
 	}
 
@@ -133,6 +133,7 @@ void	update_player(t_game *game)
 	count = ft_itoa(game->count_move);
 	printf("number of movements : %d\n", game->count_move);
 	mlx_put_image_to_window(game->mlx, game->win, game->wall, 0, 0);
+	// TODO: fix render number greather than 99
 	mlx_string_put(game->mlx, game->win, 5, 1, WHITE, count);
 	free(count);
 }
@@ -163,36 +164,36 @@ int	key_hook(int keycode, void *param)
 	int	y = game->player.position.y;
 	int	x = game->player.position.x;
 
-	if (keycode == UP && game->map[y - 1][x] != '1') // UP
+	if (keycode == UP && game->map[y - 1][x] != WALL) // UP
 	{
-		if (game->map[y - 1][x] == 'E' && game->count[2] > 0)
+		if (game->map[y - 1][x] == EXIT && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
 		game->player.position.y -= 1;
 		update_player(game);
 	}
-	if (keycode == DOWN && game->map[y + 1][x] != '1') // DOWN
+	if (keycode == DOWN && game->map[y + 1][x] != WALL) // DOWN
 	{
-		if (game->map[y + 1][x] == 'E' && game->count[2] > 0)
+		if (game->map[y + 1][x] == EXIT && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
 		game->player.position.y += 1;
 		update_player(game);
 	}
-	if (keycode == LEFT && game->map[y][x - 1] != '1') // LEFT
+	if (keycode == LEFT && game->map[y][x - 1] != WALL) // LEFT
 	{
-		if (game->map[y][x - 1] == 'E' && game->count[2] > 0)
+		if (game->map[y][x - 1] == EXIT  && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
 		game->player.position.x -= 1;
 		update_player(game);
 	}
-	if (keycode == RIGHT && game->map[y][x + 1] != '1') // RIGHT
+	if (keycode == RIGHT && game->map[y][x + 1] != WALL) // RIGHT
 	{
-		if (game->map[y][x + 1] == 'E' && game->count[2] > 0)
+		if (game->map[y][x + 1] == EXIT && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
@@ -219,26 +220,52 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 }
 
-void	check_path(char **map, int x, int y, int *count)
+void	check_exit_path(char **map, int x, int y, int *count)
 {
 	if (count <= 0)
 		return ;
-	if (map[y][x] == 'E')
+	if (map[y][x] == EXIT)
 	{
 		printf("here\n");
 		*count -= 1;
 	}
 	else
 	{
-		map[y][x] = '1';
-		if (map[y][x - 1] != '1')
-			check_path(map, x - 1, y, count);
-		if (map[y + 1][x] != '1')
-			check_path(map, x, y + 1, count);
-		if (map[y - 1][x] != '1')
-			check_path(map, x, y - 1, count);
-		if (map[y][x + 1] != '1')
-			check_path(map, x + 1, y, count);
+		map[y][x] = WALL;
+		if (map[y][x - 1] != WALL)
+			check_exit_path(map, x - 1, y, count);
+		if (map[y + 1][x] != WALL)
+			check_exit_path(map, x, y + 1, count);
+		if (map[y - 1][x] != WALL)
+			check_exit_path(map, x, y - 1, count);
+		if (map[y][x + 1] != WALL)
+			check_exit_path(map, x + 1, y, count);
+	}
+}
+
+void	check_collec_path(char **map, int x, int y, int *count)
+{
+	printf("-------------------\n");
+	print_map(map);
+	printf("-------------------\n");
+	if (count <= 0)
+		return ;
+	if (map[y][x] == COLLECT)
+	{
+		printf("here\n");
+		*count -= 1;
+	}
+	else
+	{
+		map[y][x] = WALL;
+		if (map[y][x - 1] != WALL)
+			check_collec_path(map, x - 1, y, count);
+		if (map[y + 1][x] != WALL)
+			check_collec_path(map, x, y + 1, count);
+		if (map[y - 1][x] != WALL)
+			check_collec_path(map, x, y - 1, count);
+		if (map[y][x + 1] != WALL)
+			check_collec_path(map, x + 1, y, count);
 	}
 }
 
@@ -297,15 +324,21 @@ int	main(int argc, char **argv)
 
 	get_pos(game);
 
-	int	count = 1;
+	int	count = game->count[2];
 	char	**map = map_dup(game->map, game->col_len);
 	if (map != NULL)
-		// TODO: throw error;
-	check_path(map, 
-		game->player.position.x,
-		game->player.position.y,
-		&count);
+		// TODO: throw error.
+// 	check_exit_path(map, 
+// 		game->player.position.x,
+// 		game->player.position.y,
+// 		&count);
+
+	printf("before : %d\n", count);
+	check_collec_path(map,
+			game->player.position.x,
+			game->player.position.y, &count);
 	ft_free(map);
+	printf("after : %d\n", count);
 	if (count > 0)
 	{
 		printf("Error: Player could not access to exit or collectible\n");

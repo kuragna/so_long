@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:18:31 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/22 15:18:32 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 20:51:04 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_file_path(const char *file_path)
 {
-	if (ft_strncmp(file_path, "maps/", 5) == 0)
+	if (ft_strnstr(file_path, "maps", ft_strlen(file_path)))
 	{
 		file_path = ft_strrchr(file_path, '.');
 		if (file_path == NULL || ft_strncmp(file_path, ".ber", 4) == 0)
