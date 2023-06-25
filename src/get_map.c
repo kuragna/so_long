@@ -6,13 +6,13 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:05:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/18 18:14:02 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:16:17 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-static int	get_map_size(char *file_path)
+static int	get_map_size(const char *file_path)
 {
 	int		fd;
 	char	*line;
@@ -34,27 +34,25 @@ static int	get_map_size(char *file_path)
 	return (size);
 }
 
-char	**get_map(char *file_path, int *size)
+void	get_map(t_game *game, const char *file_path)
 {
-	char	**map;
 	int		fd;
-// 	int		size;
 	int		i;
 
 	i = 0;
-	*size = get_map_size(file_path);
+	game->col_len = get_map_size(file_path);
 	fd = open(file_path, O_RDONLY);
-	if (fd == -1 || *size == -1)
-		return (NULL);
-	map = malloc(sizeof(char *) * (*size + 1));
-	if (!map)
-		return (NULL);
-	while (i < *size)
+	if (fd == -1 || game->col_len <= 0)
+		return ;
+	game->map = malloc(sizeof(char *) * (game->col_len + 1));
+	if (!game->map)
+		return ;
+	while (i < game->col_len)
 	{
-		map[i] = get_next_line(fd);
+		game->map[i] = get_next_line(fd);
 		i += 1;
 	}
-	map[i] = NULL;
+	game->row_len = (ft_strlen(game->map[0]) - 1);
+	game->map[i] = NULL;
 	close(fd);
-	return (map);
 }

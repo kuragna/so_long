@@ -1,18 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_walls.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/22 15:18:50 by aabourri          #+#    #+#             */
+/*   Updated: 2023/06/22 15:18:51 by aabourri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/so_long.h"
 
-int	check_walls(char **lines, int size)
+int	check_walls(t_game *game)
 {
 	char	*first;
 	char	*last;
-	int		len;
 	int		i;
 
-	i = -1;
-	first = lines[0];
-	last = lines[size - 1];
-	len = ft_strlen(last) - 1;
-	if (size < 5 || size == len)
-		return (1);
+	first = game->map[0];
+	last = game->map[game->col_len - 1];
 	while ((*first && *first != '\n') && (*last && *last != '\n'))
 	{
 		if (*first != '1' || *last != '1')
@@ -20,9 +27,10 @@ int	check_walls(char **lines, int size)
 		first++;
 		last++;
 	}
-	while (++i < size - 1)
+	i = 0;
+	while (++i < game->col_len - 1)
 	{
-		if (lines[i][0] != '1' || lines[i][len - 1] != '1')
+		if (game->map[i][0] != '1' || game->map[i][game->row_len - 1] != '1')
 			return (1);
 	}
 	return (0);

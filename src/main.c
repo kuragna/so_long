@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/21 19:22:49 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/25 14:34:28 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,66 +40,11 @@ void	find_leaks()
 	system("leaks -q so_long");
 }
 
-typedef struct s_vector
-{
-	int	x;
-	int	y;
-} t_vector;
-
-typedef struct s_player
-{
-	int	img_width;
-	int	img_height;
-	void	*img;
-	t_vector position;
-} t_player;
-
-typedef struct s_game
-{
-	size_t	count_move;
-	int	count_collectible;
-	int	img_width;
-	int	img_height;
-	int	screen_width;
-	int	screen_height;
-	void	*mlx;
-	void	*win;
-	void	*wall;
-	void	*collectible;
-	void	*space;
-	void	*exit;
-	void	*enemy;
-	char	**map;
-	t_player player;
-	t_vector exit_pos;
-} t_game;
-
-
-enum e_keys
-{
-	A 	= 0X0,		// 0
-	S 	= 0X1,		// 1
-	D 	= 0X2,		// 2
-	W 	= 0Xd,		// 13
-	ESC = 0X35,		// 53
-};
-
-enum e_colors
-{
-	RED		= 0XFF0000,
-	GREEN	= 0X00FF00,
-	BLUE 	= 0X0000FF,
-	DARK 	= 0X181818,
-	YELLOW	= 0XFFF26E,
-	WHITE	= 0XFFFFFF,
-};
-
 // 0 for an empty space,
 // 1 for a wall,
 // C for a collectible,
 // E for a map exit,
 // P for the player’s starting vector
-
 
 t_game *game_init()
 {
@@ -112,17 +57,15 @@ t_game *game_init()
 	return (game);
 }
 
-void	get_pos(t_game *game, int size)
+void	get_pos(t_game *game)
 {
 	int	y;
-	int	len;
 
 	y = 0;
-	len = ft_strlen(game->map[0]) - 1;
-	while (++y < size - 1)
+	while (++y < game->col_len - 1)
 	{
 		int	x = 0;
-		while (++x < len)
+		while (++x < game->row_len)
 		{
 			if (game->map[y][x] == 'P')
 			{
@@ -158,19 +101,15 @@ void	render_game(t_game *game)
 				PUT_IMAGE(game->wall);
 			if (game->map[y][x] != '1')
 				PUT_IMAGE(game->space);
+			if (game->map[y][x] == 'P')
+				PUT_IMAGE(game->wall);
 			if (game->map[y][x] == 'C')
-			{
-				game->count_collectible += 1;
 				PUT_IMAGE(game->collectible);
-			}
-			if (game->map[y][x] == 'N')
-				PUT_IMAGE(game->enemy);
 			if (game->map[y][x] == 'E')
 				PUT_IMAGE(game->exit);
 		}	
 	}
 }
-
 
 void	update_player(t_game *game)
 {
@@ -182,16 +121,21 @@ void	update_player(t_game *game)
 	y = game->player.position.y;
 
 	if (game->map[y][x] == 'C')
-		game->count_collectible -= 1;
+	{
+		game->map[y][x] = '0';
+		game->count[2] -= 1;
+	}
+
+	printf("collectible count: %d\n", game->count[2]);
+	printf("-------------------------------\n");
 
 	mlx_put_image_to_window(game->mlx, game->win, game->wall, 
 			x * game->img_width, y * game->img_height);
 	game->count_move += 1;
 	count = ft_itoa(game->count_move);
-// 	mlx_put_image_to_window(game->mlx, game->win, game->wall, (game->screen_width / 2) - 11.5, 0);
 	mlx_string_put(game->mlx, game->win, (game->screen_width / 2), 1, WHITE, count);
 	free(count);
-	printf("number of movements : %ld\n", game->count_move);
+	printf("number of movements : %d\n", game->count_move);
 }
 
 int	mouse_hook(int button, int x, int y, void *param)
@@ -201,7 +145,8 @@ int	mouse_hook(int button, int x, int y, void *param)
 
 	if (button == BTN_LEFT && y < 0)
 	{
-		exit(0);
+		if (x >= 10 && x <= 20)
+			exit(0);
 	}
 	return (0);
 }
@@ -221,7 +166,7 @@ int	key_hook(int keycode, void *param)
 
 	if (keycode == W && game->map[y - 1][x] != '1') // UP
 	{
-		if (game->map[y - 1][x] == 'E' && game->count_collectible > 0)
+		if (game->map[y - 1][x] == 'E' && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
@@ -230,7 +175,7 @@ int	key_hook(int keycode, void *param)
 	}
 	if (keycode == S && game->map[y + 1][x] != '1') // DOWN
 	{
-		if (game->map[y + 1][x] == 'E' && game->count_collectible > 0)
+		if (game->map[y + 1][x] == 'E' && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
@@ -239,7 +184,7 @@ int	key_hook(int keycode, void *param)
 	}
 	if (keycode == A && game->map[y][x - 1] != '1') // LEFT
 	{
-		if (game->map[y][x - 1] == 'E' && game->count_collectible > 0)
+		if (game->map[y][x - 1] == 'E' && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
@@ -248,7 +193,7 @@ int	key_hook(int keycode, void *param)
 	}
 	if (keycode == D && game->map[y][x + 1] != '1') // RIGHT
 	{
-		if (game->map[y][x + 1] == 'E' && game->count_collectible > 0)
+		if (game->map[y][x + 1] == 'E' && game->count[2] > 0)
 			return 1;
 		mlx_put_image_to_window(game->mlx, game->win, game->space, 
 				x * game->img_width, y * game->img_height);
@@ -275,43 +220,107 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 }
 
+void	check_path(char **map, int x, int y)
+{
+	printf("------------------\n");
+	print_map(map);
+	if (map[y][x - 1] == 'E' || map[y][x + 1] == 'E'
+	   || map[y - 1][x] == 'E' || map[y + 1][x] == 'E')
+	{
+		printf("Player can access to exit\n");
+		return ;
+	}
+	else
+	{
+		map[y][x] = '1';
+		if (map[y][x - 1] == '0')
+			check_path(map, x - 1, y);
+		if (map[y + 1][x] == '0')
+			check_path(map, x, y + 1);
+		if (map[y][x + 1] == '0')
+			check_path(map, x + 1, y);
+		if (map[y - 1][x] == '0')
+			check_path(map, x, y - 1);
+	}
+}
+
 int	main(int argc, char **argv)
 {
+	if (argc != 2)
+		return 1;
+
+	t_game *game = game_init();
+
+	get_map(game, argv[1]);
+	
+	print_map(game->map);
+
+	get_pos(game);
+
+	t_vector player = game->player.position;
+	t_vector exit = game->exit_pos;
+	printf("player(%d, %d)\n", player.x, player.y);
+	printf("exit(%d, %d)\n", exit.x, exit.y);
+
+	int	size = 0;
+	printf("size: %d\n", size);
+	check_path(game->map, player.x, player.y);
+
+	return 0;
+}
+
+int	main2(int argc, char **argv)
+{
 // 	atexit(find_leaks);
-	char	*file_path;
-	int	size;
+
+	const char	*file_path = argv[1];
 	t_game	*game;
 
-	file_path = argv[1];
 	if (argc != 2 || check_file_path(file_path))
 	{
 		printf("usage: so_long maps/file_name.ber\n");
-		return 1;
+		return (1);
 	}
 
 	game = game_init();
 	game->mlx = mlx_init();
-	game->map = get_map(file_path, &size);
+	get_map(game, file_path);
 	if (game->map == NULL)
 	{
 		printf("Error: could not read a file\n");
-		return 1;
+		return (1);
 	}
 
+	if (game->map[0] == NULL || check_walls(game))
+	{
+		printf("Error: invalid walls\n");
+		return (1);
+	}
+
+	if (check_c_e_p(game))
+	{
+		printf("Error: invalid player, exit or collectible\n");
+		return (1);
+	}
 
 	print_map(game->map);
+	get_pos(game);
 
-	get_pos(game, size);
-	
 
-// 	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
-// 			&game->img_width, &game->img_height);
-// 	game->space = mlx_xpm_file_to_image(game->mlx, "./textures/space.xpm", &game->img_width, &game->img_height);
+
+// 	int err = check_path(game->map, 
+// 			game->player.position.x, 
+// 			game->player.position.y);
+// 	printf("err: %d\n", err);
+
+	return 0;
 
 	get_images(game);
 
-	game->screen_width = (ft_strlen(game->map[0]) - 1) * game->img_width;
-	game->screen_height = size * game->img_height;
+	game->screen_width = game->row_len * game->img_width;
+	game->screen_height = game->col_len * game->img_height;
+
+
 	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
 
 
@@ -322,28 +331,10 @@ int	main(int argc, char **argv)
 	print_map(game->map);
 	render_game(game);
 	
-	get_pos(game, size);
-
-	mlx_put_image_to_window(game->mlx, game->win, game->wall,
-			game->player.position.x * game->img_width, game->player.position.y * game->img_height);
-
+	get_pos(game);
 
 	mlx_loop(game->mlx);
-	return 0;
 
-	if (game->map[0] == NULL || check_walls(game->map, size))
-	{
-		printf("Error: invalid walls\n");
-		return 1;
-	}
-
-	if (check_c_e_p(game->map, size))
-	{
-		printf("Error: invalid player, exit or collectible\n");
-		return 1;
-	}
-
-	print_map(game->map);
-
-	return 0;
+	return (0);
 }
+
