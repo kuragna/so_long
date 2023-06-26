@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/26 19:41:47 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/26 20:04:55 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,9 +234,6 @@ void	check_path(char **map, int x, int y, int *count)
 
 void	check_exit_path(char **map, int x, int y, int *count)
 {
-	printf("--------------------\n");
-	print_map(map);
-	printf("--------------------\n");
 	if (*count <= 0)
 		return ;
 	if (map[y][x] == EXIT)
@@ -250,6 +247,23 @@ void	check_exit_path(char **map, int x, int y, int *count)
 		check_exit_path(map, x + 1, y, count);
 	if (map[y - 1][x] != WALL)
 		check_exit_path(map, x, y - 1, count);
+}
+
+void	check_collectible_path(char **map, int x, int y, int *count)
+{
+	if (*count <= 0)
+		return ;
+	if (map[y][x] == COLLECT)
+		*count -= 1;
+	map[y][x] = WALL;
+	if (map[y][x - 1] != WALL && map[y][x - 1] != EXIT)
+		check_collectible_path(map, x - 1, y, count);
+	if (map[y + 1][x] != WALL && map[y + 1][x] != EXIT)
+		check_collectible_path(map, x, y + 1, count);
+	if (map[y][x + 1] != WALL && map[y][x + 1] != EXIT)
+		check_collectible_path(map, x + 1, y, count);
+	if (map[y - 1][x] != WALL && map[y - 1][x] != EXIT)
+		check_collectible_path(map, x, y - 1, count);
 }
 
 int	main(int argc, char **argv)
@@ -297,14 +311,18 @@ int	main(int argc, char **argv)
 
 	get_pos(game);
 
-	count = 1;
-
+	count = game->count[2];
 	printf("count before: %d\n", count);
-	check_exit_path(map,
+	check_collectible_path(map,
 			game->player.position.x,
 			game->player.position.y,
 			&count);
 	printf("count before: %d\n", count);
+	/*check exit path*/
+// 	check_exit_path(map,
+// 			game->player.position.x,
+// 			game->player.position.y,
+// 			&count);
 
 	ft_free(map);
 	if (count > 0)
