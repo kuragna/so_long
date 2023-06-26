@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 20:29:17 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/26 17:36:29 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #define EXIT 'E'
 #define SPACE '0'
 #define WALL '1'
+#define BTN_LEFT 1
+#define STDERR 2
 
 typedef struct s_vector
 {
@@ -82,10 +84,12 @@ enum e_colors
 	WHITE	= 0xffffff,
 };
 
-void	get_map(t_game *game, const char *file_path);
+char	**map_dup(char **map, size_t size);
+int		get_map(t_game *game, const char *file_path);
 int		check_walls(t_game *game);
 int		check_file_path(const char *file_path);
 int		check_c_e_p(t_game *game);
 void	print_map(char **lines);
+void	free_game(t_game *game);
 
 #endif

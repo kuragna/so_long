@@ -6,13 +6,14 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/25 20:53:47 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/26 19:41:47 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
 int	key_hook(int keycode, void *param);
+void	free_game(t_game *game);
 
 /*
  *	TODO: File name with .ber extension.- DONE
@@ -32,8 +33,6 @@ int	key_hook(int keycode, void *param);
 // loop
 // clean up
 
-#define BTN_LEFT 1
-#define EXTENSION ".ber"
 
 void	find_leaks()
 {
@@ -153,17 +152,13 @@ int	mouse_hook(int button, int x, int y, void *param)
 
 int	key_hook(int keycode, void *param)
 {
-	/*
-	 *	W = UP 		-> player[y - 1][x]
-	 *	S = DOWN	-> player[y + 1][x]
-	 *	A = LEFT	-> player[y][x - 1]
-	 *	D = RIGHT	-> player[y][x + 1]
-	 * */
+	t_game	*game;
+	int		y;
+	int		x;
 
-	t_game *game = (t_game*)param;
-	int	y = game->player.position.y;
-	int	x = game->player.position.x;
-
+	game = (t_game*)param;
+	y = game->player.position.y;
+	x = game->player.position.x;
 	if (keycode == UP && game->map[y - 1][x] != WALL) // UP
 	{
 		if (game->map[y - 1][x] == EXIT && game->count[2] > 0)
@@ -201,7 +196,8 @@ int	key_hook(int keycode, void *param)
 		update_player(game);
 	}
 	if (keycode == ESC)
-		exit(0);
+	{
+	}
 	return 0;
 }
 
@@ -212,177 +208,127 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
 			&game->img_width, &game->img_height);
-	game->collectible = mlx_xpm_file_to_image(game->mlx, "./textures/Cherry.xpm",
-			&game->img_width, &game->img_height);
+	game->collectible = mlx_xpm_file_to_image(game->mlx, "./textures/Cherry.xpm", &game->img_width, &game->img_height);
 	game->enemy = mlx_xpm_file_to_image(game->mlx, "./textures/fire.xpm",
 			&game->img_width, &game->img_height);
 	game->exit = mlx_xpm_file_to_image(game->mlx, "./textures/exit.xpm",
 			&game->img_width, &game->img_height);
 }
 
+void	check_path(char **map, int x, int y, int *count)
+{
+	if (*count <= 0)
+		return ;
+	if (map[y][x] == COLLECT || map[y][x] == EXIT)
+		*count -= 1;
+	map[y][x] = PLAYER;
+	if (map[y][x - 1] != PLAYER && map[y][x - 1] != WALL && map[y][x - 1] != EXIT)
+		check_path(map, x - 1, y, count);
+	if (map[y + 1][x] != PLAYER && map[y + 1][x] != WALL && map[y + 1][x] != EXIT)
+		check_path(map, x, y + 1, count);
+	if (map[y - 1][x] != PLAYER && map[y - 1][x] != WALL && map[y - 1][x] != EXIT)
+		check_path(map, x, y - 1, count);
+	if (map[y][x + 1] != PLAYER && map[y][x + 1] != WALL && map[y][x + 1] != EXIT)
+		check_path(map, x + 1, y, count);
+}
+
 void	check_exit_path(char **map, int x, int y, int *count)
 {
-	if (count <= 0)
+	printf("--------------------\n");
+	print_map(map);
+	printf("--------------------\n");
+	if (*count <= 0)
 		return ;
 	if (map[y][x] == EXIT)
-	{
-		printf("here\n");
 		*count -= 1;
-	}
-	else
-	{
-		map[y][x] = WALL;
-		if (map[y][x - 1] != WALL)
-			check_exit_path(map, x - 1, y, count);
-		if (map[y + 1][x] != WALL)
-			check_exit_path(map, x, y + 1, count);
-		if (map[y - 1][x] != WALL)
-			check_exit_path(map, x, y - 1, count);
-		if (map[y][x + 1] != WALL)
-			check_exit_path(map, x + 1, y, count);
-	}
+	map[y][x] = WALL;
+	if (map[y][x - 1] != WALL)
+		check_exit_path(map, x - 1, y, count);
+	if (map[y + 1][x] != WALL)
+		check_exit_path(map, x, y + 1, count);
+	if (map[y][x + 1] != WALL)
+		check_exit_path(map, x + 1, y, count);
+	if (map[y - 1][x] != WALL)
+		check_exit_path(map, x, y - 1, count);
 }
-
-void	check_collec_path(char **map, int x, int y, int *count)
-{
-	printf("-------------------\n");
-	print_map(map);
-	printf("-------------------\n");
-	if (count <= 0)
-		return ;
-	if (map[y][x] == COLLECT)
-	{
-		printf("here\n");
-		*count -= 1;
-	}
-	else
-	{
-		map[y][x] = WALL;
-		if (map[y][x - 1] != WALL)
-			check_collec_path(map, x - 1, y, count);
-		if (map[y + 1][x] != WALL)
-			check_collec_path(map, x, y + 1, count);
-		if (map[y - 1][x] != WALL)
-			check_collec_path(map, x, y - 1, count);
-		if (map[y][x + 1] != WALL)
-			check_collec_path(map, x + 1, y, count);
-	}
-}
-
-char	**map_dup(char **map, size_t size)
-{
-	char	**tmp;
-	size_t	i;
-
-	i = 0;
-	tmp = malloc(sizeof(char*) * (size + 1));
-	if (!tmp)
-		return (NULL);
-	while (map[i])
-	{
-		tmp[i] = ft_strdup(map[i]);
-		i++;
-	}
-	tmp[i] = NULL;
-	return (tmp);
-}
-
-
 
 int	main(int argc, char **argv)
 {
-// 	atexit(find_leaks);
-
-	const char	*file_path = argv[1];
+	atexit(find_leaks);
 	t_game	*game;
+	char	*file_path;
+	char	**map;
+	int		count;
 
+	file_path = argv[1];
 	if (argc != 2 || check_file_path(file_path))
 	{
-		printf("usage: so_long maps/file_name.ber\n");
+		ft_putendl_fd("usage: so_long/file_name.ber", STDERR);
 		return (1);
 	}
-
 	game = game_init();
-	game->mlx = mlx_init();
-	get_map(game, file_path);
-	if (game->map == NULL)
+	if (get_map(game, file_path))
 	{
-		printf("Error: could not read a file\n");
+		free_game(game);
+		ft_putendl_fd("Error: Could not read the map", STDERR);
 		return (1);
 	}
-
 	if (game->map[0] == NULL || check_walls(game))
 	{
-		printf("Error: invalid walls\n");
+		free_game(game);
+		ft_putendl_fd("Error: The mao has invalid wall", STDERR);
 		return (1);
 	}
 	if (check_c_e_p(game))
 	{
-		printf("Error: no enough character\n");
+		free_game(game);
+		ft_putendl_fd("Error: The map does not have enough characters", STDERR);
+		return (1);
+	}
+
+
+	map = map_dup(game->map, game->col_len);
+	if (map == NULL)
+	{
+		free_game(game);
+		perror("");
 		return (1);
 	}
 
 	get_pos(game);
 
-	int	count = game->count[2];
-	char	**map = map_dup(game->map, game->col_len);
-	if (map != NULL)
-		// TODO: throw error.
-// 	check_exit_path(map, 
-// 		game->player.position.x,
-// 		game->player.position.y,
-// 		&count);
+	count = 1;
 
-	printf("before : %d\n", count);
-	check_collec_path(map,
+	printf("count before: %d\n", count);
+	check_exit_path(map,
 			game->player.position.x,
-			game->player.position.y, &count);
+			game->player.position.y,
+			&count);
+	printf("count before: %d\n", count);
+
 	ft_free(map);
-	printf("after : %d\n", count);
 	if (count > 0)
 	{
-		printf("Error: Player could not access to exit or collectible\n");
-		return 1;
+		free_game(game);
+		ft_putendl_fd("Error: The player could not access to exit or collectible", STDERR);
+		return (1);
 	}
+	return 0;
+	// TODO: check if mlx function failed
+	game->mlx = mlx_init();
 	get_images(game);
 	game->screen_width = game->row_len * game->img_width;
 	game->screen_height = game->col_len * game->img_height;
 
 	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
 
-
 	mlx_key_hook(game->win, key_hook, game);
-
 	mlx_mouse_hook(game->win, mouse_hook, game);
 
-	print_map(game->map);
 	render_game(game);
 	
-	get_pos(game);
-
 	mlx_loop(game->mlx);
 
 	return (0);
-}
-
-int	main2(int argc, char **argv)
-{
-	if (argc != 2)
-		return 1;
-
-	t_game *game = game_init();
-
-	get_map(game, argv[1]);
-	
-	get_pos(game);
-
-	t_vector player = game->player.position;
-	t_vector exit = game->exit_pos;
-	printf("player(%d, %d)\n", player.x, player.y);
-	printf("exit(%d, %d)\n", exit.x, exit.y);
-
-	print_map(game->map);
-
-	return 0;
 }
 

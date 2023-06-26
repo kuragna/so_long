@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:05:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/22 15:16:17 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/26 13:49:20 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	get_map_size(const char *file_path)
 	return (size);
 }
 
-void	get_map(t_game *game, const char *file_path)
+int	get_map(t_game *game, const char *file_path)
 {
 	int		fd;
 	int		i;
@@ -43,16 +43,19 @@ void	get_map(t_game *game, const char *file_path)
 	game->col_len = get_map_size(file_path);
 	fd = open(file_path, O_RDONLY);
 	if (fd == -1 || game->col_len <= 0)
-		return ;
+		return (1);
 	game->map = malloc(sizeof(char *) * (game->col_len + 1));
 	if (!game->map)
-		return ;
+		return (1);
 	while (i < game->col_len)
 	{
 		game->map[i] = get_next_line(fd);
+		if (!game->map[i])
+			return (1);
 		i += 1;
 	}
 	game->row_len = (ft_strlen(game->map[0]) - 1);
 	game->map[i] = NULL;
 	close(fd);
+	return (0);
 }
