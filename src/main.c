@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/26 20:04:55 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/27 14:29:30 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	free_game(t_game *game);
  *	TODO: The map must be rectangular. - DONE
  *	TODO: The map must be closed/surrounded by walls. - DONE
  *	TODO: Valid player path to exit.
+ *	TODO: print number of movements in shell and screen. - DONE
  *
  * */
 
@@ -201,6 +202,7 @@ int	key_hook(int keycode, void *param)
 	return 0;
 }
 
+
 void	get_images(t_game *game)
 {
 
@@ -208,28 +210,12 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
 			&game->img_width, &game->img_height);
-	game->collectible = mlx_xpm_file_to_image(game->mlx, "./textures/Cherry.xpm", &game->img_width, &game->img_height);
+	game->collectible = mlx_xpm_file_to_image(game->mlx, "./textures/Cherry.xpm",
+			&game->img_width, &game->img_height);
 	game->enemy = mlx_xpm_file_to_image(game->mlx, "./textures/fire.xpm",
 			&game->img_width, &game->img_height);
 	game->exit = mlx_xpm_file_to_image(game->mlx, "./textures/exit.xpm",
 			&game->img_width, &game->img_height);
-}
-
-void	check_path(char **map, int x, int y, int *count)
-{
-	if (*count <= 0)
-		return ;
-	if (map[y][x] == COLLECT || map[y][x] == EXIT)
-		*count -= 1;
-	map[y][x] = PLAYER;
-	if (map[y][x - 1] != PLAYER && map[y][x - 1] != WALL && map[y][x - 1] != EXIT)
-		check_path(map, x - 1, y, count);
-	if (map[y + 1][x] != PLAYER && map[y + 1][x] != WALL && map[y + 1][x] != EXIT)
-		check_path(map, x, y + 1, count);
-	if (map[y - 1][x] != PLAYER && map[y - 1][x] != WALL && map[y - 1][x] != EXIT)
-		check_path(map, x, y - 1, count);
-	if (map[y][x + 1] != PLAYER && map[y][x + 1] != WALL && map[y][x + 1] != EXIT)
-		check_path(map, x + 1, y, count);
 }
 
 void	check_exit_path(char **map, int x, int y, int *count)
@@ -266,7 +252,24 @@ void	check_collectible_path(char **map, int x, int y, int *count)
 		check_collectible_path(map, x, y - 1, count);
 }
 
+void	print_error(t_game *game, const char *err_msg)
+{
+	ft_putendl_fd((char*)err_msg, STDERR);
+	free_game(game);
+	exit(EXIT_FAILURE);
+}
+
 int	main(int argc, char **argv)
+{
+	if (argc != 2)
+		return 1;
+	t_game *game = game_init();
+	get_map(game, argv[1]);
+	print_map(game->map);
+	return 0;
+}
+
+int	main2(int argc, char **argv)
 {
 	atexit(find_leaks);
 	t_game	*game;
@@ -283,25 +286,20 @@ int	main(int argc, char **argv)
 	game = game_init();
 	if (get_map(game, file_path))
 	{
-		free_game(game);
-		ft_putendl_fd("Error: Could not read the map", STDERR);
-		return (1);
+		print_error(game, "Error: Could not read the map");
 	}
 	if (game->map[0] == NULL || check_walls(game))
 	{
-		free_game(game);
-		ft_putendl_fd("Error: The mao has invalid wall", STDERR);
-		return (1);
+		print_error(game, "Error: The map has invalid wall");
 	}
 	if (check_c_e_p(game))
 	{
-		free_game(game);
-		ft_putendl_fd("Error: The map does not have enough characters", STDERR);
-		return (1);
+		print_error(game, "Error: The map has wrong character");
 	}
 
 
 	map = map_dup(game->map, game->col_len);
+	
 	if (map == NULL)
 	{
 		free_game(game);
@@ -310,28 +308,39 @@ int	main(int argc, char **argv)
 	}
 
 	get_pos(game);
+	print_map(game->map);
 
-	count = game->count[2];
-	printf("count before: %d\n", count);
-	check_collectible_path(map,
+	// check if player can access to exit.
+	count = 1;
+	check_exit_path(map,
 			game->player.position.x,
 			game->player.position.y,
 			&count);
-	printf("count before: %d\n", count);
-	/*check exit path*/
-// 	check_exit_path(map,
-// 			game->player.position.x,
-// 			game->player.position.y,
-// 			&count);
-
 	ft_free(map);
 	if (count > 0)
 	{
+		printf("from exit\n");
 		free_game(game);
 		ft_putendl_fd("Error: The player could not access to exit or collectible", STDERR);
 		return (1);
 	}
-	return 0;
+	// check if player can access to collectible.
+	count = game->count[2];
+	map = map_dup(game->map, game->col_len);
+
+	check_collectible_path(map,
+			game->player.position.x,
+			game->player.position.y,
+			&count);
+
+	ft_free(map);
+	if (count > 0)
+	{
+		printf("from collectible\n");
+		free_game(game);
+		ft_putendl_fd("Error: The player could not access to exit or collectible", STDERR);
+		return (1);
+	}
 	// TODO: check if mlx function failed
 	game->mlx = mlx_init();
 	get_images(game);
