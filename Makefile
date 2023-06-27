@@ -4,7 +4,7 @@ CFLAGS	= -Wall -Werror -Wextra -g3 -lm -lmlx -framework OpenGL -framework AppKit
 RM		= rm -fr
 SRC		= main.c check_c_e_p.c print_map.c \
 		  check_file_path.c check_walls.c get_map.c \
-		  map_dup.c free_game.c
+		  map_dup.c free_game.c check_path.c
 
 
 SRC		:= $(addprefix src/, $(SRC))

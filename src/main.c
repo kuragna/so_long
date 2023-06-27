@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 14:29:30 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/27 18:15:31 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ void	update_player(t_game *game)
 		game->map[y][x] = SPACE;
 		game->count[2] -= 1;
 	}
-
 	mlx_put_image_to_window(game->mlx, game->win, game->wall,
 			x * game->img_width, y * game->img_height);
 
@@ -138,16 +137,9 @@ void	update_player(t_game *game)
 	free(count);
 }
 
-int	mouse_hook(int button, int x, int y, void *param)
+int	mouse_hook(int button, int x, int y)
 {
-	(void)param;
-	(void)x;
-
-	if (button == BTN_LEFT && y < 0)
-	{
-		if (x >= 10 && x <= 20)
-			exit(0);
-	}
+	printf("button: %d | screen(%d, %d)\n", button, x, y);
 	return (0);
 }
 
@@ -198,6 +190,7 @@ int	key_hook(int keycode, void *param)
 	}
 	if (keycode == ESC)
 	{
+		exit(0);
 	}
 	return 0;
 }
@@ -218,40 +211,6 @@ void	get_images(t_game *game)
 			&game->img_width, &game->img_height);
 }
 
-void	check_exit_path(char **map, int x, int y, int *count)
-{
-	if (*count <= 0)
-		return ;
-	if (map[y][x] == EXIT)
-		*count -= 1;
-	map[y][x] = WALL;
-	if (map[y][x - 1] != WALL)
-		check_exit_path(map, x - 1, y, count);
-	if (map[y + 1][x] != WALL)
-		check_exit_path(map, x, y + 1, count);
-	if (map[y][x + 1] != WALL)
-		check_exit_path(map, x + 1, y, count);
-	if (map[y - 1][x] != WALL)
-		check_exit_path(map, x, y - 1, count);
-}
-
-void	check_collectible_path(char **map, int x, int y, int *count)
-{
-	if (*count <= 0)
-		return ;
-	if (map[y][x] == COLLECT)
-		*count -= 1;
-	map[y][x] = WALL;
-	if (map[y][x - 1] != WALL && map[y][x - 1] != EXIT)
-		check_collectible_path(map, x - 1, y, count);
-	if (map[y + 1][x] != WALL && map[y + 1][x] != EXIT)
-		check_collectible_path(map, x, y + 1, count);
-	if (map[y][x + 1] != WALL && map[y][x + 1] != EXIT)
-		check_collectible_path(map, x + 1, y, count);
-	if (map[y - 1][x] != WALL && map[y - 1][x] != EXIT)
-		check_collectible_path(map, x, y - 1, count);
-}
-
 void	print_error(t_game *game, const char *err_msg)
 {
 	ft_putendl_fd((char*)err_msg, STDERR);
@@ -259,23 +218,12 @@ void	print_error(t_game *game, const char *err_msg)
 	exit(EXIT_FAILURE);
 }
 
+
 int	main(int argc, char **argv)
 {
-	if (argc != 2)
-		return 1;
-	t_game *game = game_init();
-	get_map(game, argv[1]);
-	print_map(game->map);
-	return 0;
-}
-
-int	main2(int argc, char **argv)
-{
-	atexit(find_leaks);
+// 	atexit(find_leaks);
 	t_game	*game;
 	char	*file_path;
-	char	**map;
-	int		count;
 
 	file_path = argv[1];
 	if (argc != 2 || check_file_path(file_path))
@@ -297,50 +245,16 @@ int	main2(int argc, char **argv)
 		print_error(game, "Error: The map has wrong character");
 	}
 
+	get_pos(game);
 
-	map = map_dup(game->map, game->col_len);
-	
-	if (map == NULL)
+	if (check_path(game))
 	{
-		free_game(game);
-		perror("");
-		return (1);
+		print_error(game, "Error: The map has invalid path");
 	}
 
-	get_pos(game);
+		
 	print_map(game->map);
 
-	// check if player can access to exit.
-	count = 1;
-	check_exit_path(map,
-			game->player.position.x,
-			game->player.position.y,
-			&count);
-	ft_free(map);
-	if (count > 0)
-	{
-		printf("from exit\n");
-		free_game(game);
-		ft_putendl_fd("Error: The player could not access to exit or collectible", STDERR);
-		return (1);
-	}
-	// check if player can access to collectible.
-	count = game->count[2];
-	map = map_dup(game->map, game->col_len);
-
-	check_collectible_path(map,
-			game->player.position.x,
-			game->player.position.y,
-			&count);
-
-	ft_free(map);
-	if (count > 0)
-	{
-		printf("from collectible\n");
-		free_game(game);
-		ft_putendl_fd("Error: The player could not access to exit or collectible", STDERR);
-		return (1);
-	}
 	// TODO: check if mlx function failed
 	game->mlx = mlx_init();
 	get_images(game);
