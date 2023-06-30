@@ -6,13 +6,13 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 14:22:16 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 15:25:44 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	check_c_e_p(t_game *game)
+int	check_character(t_game *game)
 {
 	char	**map;
 	int		y;

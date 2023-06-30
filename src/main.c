@@ -6,13 +6,12 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 18:15:31 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:48:31 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	key_hook(int keycode, void *param);
 void	free_game(t_game *game);
 
 /*
@@ -57,144 +56,11 @@ t_game *game_init()
 	return (game);
 }
 
-void	get_pos(t_game *game)
-{
-	int	y;
-
-	y = 0;
-	while (++y < game->col_len - 1)
-	{
-		int	x = 0;
-		while (++x < game->row_len)
-		{
-			if (game->map[y][x] == PLAYER)
-			{
-				game->player.position.x = x;
-				game->player.position.y = y;
-			}
-			else if (game->map[y][x] == EXIT)
-			{
-				game->exit_pos.x = x;
-				game->exit_pos.y = y;
-			}
-		}
-	}
-}
-
-#define PUT_IMAGE(img) mlx_put_image_to_window(game->mlx, game->win, img, img_width * x, img_height * y)
-
-void	render_game(t_game *game)
-{
-	int	img_width = game->img_width;
-	int	img_height = game->img_height;
-	size_t	width = (game->screen_width / img_width);
-	size_t	height = (game->screen_height / img_height);
-	size_t	y = -1;
-	size_t	x;
-
-	while (++y < height)
-	{
-		x = -1;
-		while (++x < width)
-		{
-			if (game->map[y][x] == WALL)
-				PUT_IMAGE(game->wall);
-			if (game->map[y][x] != WALL)
-				PUT_IMAGE(game->space);
-			if (game->map[y][x] == PLAYER)
-				PUT_IMAGE(game->wall);
-			if (game->map[y][x] == COLLECT)
-				PUT_IMAGE(game->collectible);
-			if (game->map[y][x] == EXIT)
-				PUT_IMAGE(game->exit);
-		}	
-	}
-}
-
-void	update_player(t_game *game)
-{
-	char	*count;
-	int		x;
-	int		y;
-
-	x = game->player.position.x;
-	y = game->player.position.y;
-
-	if (game->map[y][x] == COLLECT)
-	{
-		game->map[y][x] = SPACE;
-		game->count[2] -= 1;
-	}
-	mlx_put_image_to_window(game->mlx, game->win, game->wall,
-			x * game->img_width, y * game->img_height);
-
-	game->count_move += 1;
-	count = ft_itoa(game->count_move);
-	printf("number of movements : %d\n", game->count_move);
-	mlx_put_image_to_window(game->mlx, game->win, game->wall, 0, 0);
-	// TODO: fix render number greather than 99
-	mlx_string_put(game->mlx, game->win, 5, 1, WHITE, count);
-	free(count);
-}
-
 int	mouse_hook(int button, int x, int y)
 {
 	printf("button: %d | screen(%d, %d)\n", button, x, y);
 	return (0);
 }
-
-int	key_hook(int keycode, void *param)
-{
-	t_game	*game;
-	int		y;
-	int		x;
-
-	game = (t_game*)param;
-	y = game->player.position.y;
-	x = game->player.position.x;
-	if (keycode == UP && game->map[y - 1][x] != WALL) // UP
-	{
-		if (game->map[y - 1][x] == EXIT && game->count[2] > 0)
-			return 1;
-		mlx_put_image_to_window(game->mlx, game->win, game->space, 
-				x * game->img_width, y * game->img_height);
-		game->player.position.y -= 1;
-		update_player(game);
-	}
-	if (keycode == DOWN && game->map[y + 1][x] != WALL) // DOWN
-	{
-		if (game->map[y + 1][x] == EXIT && game->count[2] > 0)
-			return 1;
-		mlx_put_image_to_window(game->mlx, game->win, game->space, 
-				x * game->img_width, y * game->img_height);
-		game->player.position.y += 1;
-		update_player(game);
-	}
-	if (keycode == LEFT && game->map[y][x - 1] != WALL) // LEFT
-	{
-		if (game->map[y][x - 1] == EXIT  && game->count[2] > 0)
-			return 1;
-		mlx_put_image_to_window(game->mlx, game->win, game->space, 
-				x * game->img_width, y * game->img_height);
-		game->player.position.x -= 1;
-		update_player(game);
-	}
-	if (keycode == RIGHT && game->map[y][x + 1] != WALL) // RIGHT
-	{
-		if (game->map[y][x + 1] == EXIT && game->count[2] > 0)
-			return 1;
-		mlx_put_image_to_window(game->mlx, game->win, game->space, 
-				x * game->img_width, y * game->img_height);
-		game->player.position.x += 1;
-		update_player(game);
-	}
-	if (keycode == ESC)
-	{
-		exit(0);
-	}
-	return 0;
-}
-
 
 void	get_images(t_game *game)
 {
@@ -218,10 +84,37 @@ void	print_error(t_game *game, const char *err_msg)
 	exit(EXIT_FAILURE);
 }
 
+int	close_win(t_game *game)
+{
+	free_game(game);
+	exit(EXIT_SUCCESS);
+	return (0);
+}
+
+void	so_long_load(t_game *game)
+{	
+	// TODO: check if mlx function failed
+	game->mlx = mlx_init();
+	get_images(game);
+	game->screen_width = game->row_len * game->img_width;
+	game->screen_height = game->col_len * game->img_height;
+
+	game->win = mlx_new_window(
+			game->mlx,
+			game->screen_width,
+			game->screen_height,
+			"so_long");
+
+	mlx_key_hook(game->win, key_hook, game);
+	mlx_hook(game->win, 17, (1 << 17), close_win, game);
+
+	render_game(game);
+	mlx_loop(game->mlx);
+}
 
 int	main(int argc, char **argv)
 {
-// 	atexit(find_leaks);
+	atexit(find_leaks);
 	t_game	*game;
 	char	*file_path;
 
@@ -240,36 +133,16 @@ int	main(int argc, char **argv)
 	{
 		print_error(game, "Error: The map has invalid wall");
 	}
-	if (check_c_e_p(game))
+	if (check_character(game))
 	{
 		print_error(game, "Error: The map has wrong character");
 	}
-
 	get_pos(game);
-
 	if (check_path(game))
 	{
 		print_error(game, "Error: The map has invalid path");
 	}
-
-		
-	print_map(game->map);
-
-	// TODO: check if mlx function failed
-	game->mlx = mlx_init();
-	get_images(game);
-	game->screen_width = game->row_len * game->img_width;
-	game->screen_height = game->col_len * game->img_height;
-
-	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "so_long");
-
-	mlx_key_hook(game->win, key_hook, game);
-	mlx_mouse_hook(game->win, mouse_hook, game);
-
-	render_game(game);
-	
-	mlx_loop(game->mlx);
-
+	so_long_load(game);
 	return (0);
 }
 

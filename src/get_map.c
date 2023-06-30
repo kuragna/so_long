@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:05:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 14:36:41 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:10:14 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	get_map_size(const char *file_path)
 {
-	int		fd;
 	char	*line;
+	int		fd;
 	int		size;
 
 	size = 0;
@@ -25,10 +25,10 @@ static int	get_map_size(const char *file_path)
 	while (1)
 	{
 		line = get_next_line(fd);
-		if (!line)
+		if (line == NULL)
 			break ;
-		size += 1;
 		free(line);
+		size += 1;
 	}
 	close(fd);
 	return (size);

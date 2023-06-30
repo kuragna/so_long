@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 17:36:52 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 18:04:41 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 14:28:33 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ static void	check_exit_path(char **map, int x, int y, int *count)
 
 int	check_path(t_game *game)
 {
-	const int	x = game->player.position.x;
-	const int	y = game->player.position.y;
+	const int	x = game->player.pos.x;
+	const int	y = game->player.pos.y;
 	int			count;
 	char		**map;
 
