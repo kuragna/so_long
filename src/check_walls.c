@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:18:50 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/26 17:53:13 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:27:51 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	check_walls(t_game *game)
 	last = game->map[game->col_len - 1];
 	while ((*first && *first != '\n') && (*last && *last != '\n'))
 	{
-		if (*first != WALL || *last != WALL)
+		if (*first != CHAR_1 || *last != CHAR_1)
 			return (1);
 		first++;
 		last++;
@@ -32,8 +32,8 @@ int	check_walls(t_game *game)
 	i = 0;
 	while (++i < game->col_len - 1)
 	{
-		if (game->map[i][0] != WALL ||
-			game->map[i][game->row_len - 1] != WALL)
+		if (game->map[i][0] != CHAR_1 ||
+			game->map[i][game->row_len - 1] != CHAR_1)
 			return (1);
 	}
 	return (0);

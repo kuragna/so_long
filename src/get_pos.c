@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:54:13 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 15:00:53 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:31:34 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	get_pos(t_game *game)
 		x = 0;
 		while (++x < game->row_len)
 		{
-			if (game->map[y][x] == PLAYER)
+			if (game->map[y][x] == CHAR_P)
 			{
 				game->player.pos.x = x;
 				game->player.pos.y = y;
 			}
-			else if (game->map[y][x] == EXIT)
+			else if (game->map[y][x] == CHAR_E)
 			{
 				game->exit_pos.x = x;
 				game->exit_pos.y = y;

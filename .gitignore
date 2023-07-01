@@ -1,2 +1,8 @@
-so_long
+main
+.gitignore
+*.vscode
 *.o
+*.DS_Store
+*.sh
+*.swap
+*.swo

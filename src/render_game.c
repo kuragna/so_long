@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 13:33:11 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 14:47:37 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/01 14:52:40 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	render_exit_player(t_game *game)
 	mlx_put_image_to_window(
 		game->mlx,
 		game->win,
-		game->wall,
+		game->player.img[2],
 		game->player.pos.x * game->img_width,
 		game->player.pos.y * game->img_height);
 	mlx_put_image_to_window(
@@ -39,13 +39,13 @@ void	render_game(t_game *game)
 		x = -1;
 		while (++x < (game->screen_width / game->img_width))
 		{
-			if (game->map[y][x] == WALL)
+			if (game->map[y][x] == CHAR_1)
 				mlx_put_image_to_window(game->mlx, game->win,
 					game->wall, game->img_width * x, game->img_height * y);
-			if (game->map[y][x] != WALL)
+			if (game->map[y][x] != CHAR_1)
 				mlx_put_image_to_window(game->mlx, game->win,
 					game->space, game->img_width * x, game->img_height * y);
-			if (game->map[y][x] == COLLECT)
+			if (game->map[y][x] == CHAR_C)
 				mlx_put_image_to_window(game->mlx, game->win,
 					game->collectible,
 					game->img_width * x, game->img_height * y);

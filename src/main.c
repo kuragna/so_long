@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 16:48:31 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/01 15:15:11 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,22 @@ t_game *game_init()
 	return (game);
 }
 
-int	mouse_hook(int button, int x, int y)
+void	get_player_images(t_game *game)
 {
-	printf("button: %d | screen(%d, %d)\n", button, x, y);
-	return (0);
+		
+	game->player.img[0] = mlx_xpm_file_to_image(game->mlx, "./textures/player_up.xpm",
+			&game->img_width, &game->img_height);
+	game->player.img[1] = mlx_xpm_file_to_image(game->mlx, "./textures/player_down.xpm",
+			&game->img_width, &game->img_height);
+	game->player.img[2] = mlx_xpm_file_to_image(game->mlx, "./textures/player_left.xpm",
+			&game->img_width, &game->img_height);
+	game->player.img[3] = mlx_xpm_file_to_image(game->mlx, "./textures/player_right.xpm",
+			&game->img_width, &game->img_height);
 }
 
 void	get_images(t_game *game)
 {
-
+	get_player_images(game);
 	game->space = mlx_xpm_file_to_image(game->mlx, "./textures/space.xpm",
 			&game->img_width, &game->img_height);
 	game->wall = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm",
@@ -84,12 +91,6 @@ void	print_error(t_game *game, const char *err_msg)
 	exit(EXIT_FAILURE);
 }
 
-int	close_win(t_game *game)
-{
-	free_game(game);
-	exit(EXIT_SUCCESS);
-	return (0);
-}
 
 void	so_long_load(t_game *game)
 {	
@@ -111,6 +112,7 @@ void	so_long_load(t_game *game)
 	render_game(game);
 	mlx_loop(game->mlx);
 }
+
 
 int	main(int argc, char **argv)
 {

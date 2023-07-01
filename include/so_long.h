@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 15:40:30 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/01 15:17:39 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_player
 {
 	int		img_width;
 	int		img_height;
-	void	*img;
+	void	*img[4];
 	t_pos	pos;
 } t_player;
 
@@ -62,20 +62,20 @@ typedef struct s_game
 
 enum s_character
 {
-	COLLECT = 67,
-	PLAYER = 80,
-	EXIT = 69,
-	SPACE = 48,
-	WALL = 49,	
+	CHAR_C	= 0x43,
+	CHAR_P	= 0x50,
+	CHAR_E	= 0x45,
+	CHAR_0 	= 0x30,
+	CHAR_1 	= 0x31
 };
 
 enum e_keys
 {
-	LEFT	= 0x0,		// 0	= LEFT - A
-	RIGHT	= 0x2,		// 2 	= RIGHT - D
-	DOWN	= 0x1,		// 1 	= DOWN - S
-	UP		= 0xd,		// 13	= UP - W
-	ESC		= 0x35,		// 53 	= EXIT
+	KEY_A = 0x0,		// 0	= LEFT - A
+	KEY_D = 0x2,		// 2 	= RIGHT - D
+	KEY_S = 0x1,		// 1 	= DOWN - S
+	KEY_W = 0xd,		// 13	= UP - W
+	KEY_ESC = 0x35,		// 53 	= EXIT
 };
 
 enum e_colors
@@ -97,8 +97,9 @@ int		check_path(t_game *game);
 void	print_map(char **lines);
 void	free_game(t_game *game);
 void	render_game(t_game *game);
-void	update_player(t_game *game);
+void	update_player(t_game *game, const unsigned int idx);
 void	get_pos(t_game *game);
 int		key_hook(int keycode, t_game *game);
+int		close_win(t_game *game);
 
 #endif // SO_LONG
