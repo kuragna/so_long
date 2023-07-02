@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 13:31:15 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/01 15:32:10 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/02 20:31:20 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 // TODO: fix render number greather than 99
 
-void	update_player(t_game *game, const unsigned int idx)
+void	update_player(t_game *game)
 {
-	(void)idx;
 	char	*count;
 	const int	y = game->player.pos.y;
 	const int	x = game->player.pos.x;
@@ -28,8 +27,8 @@ void	update_player(t_game *game, const unsigned int idx)
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->space,
 		x * game->img_width, y * game->img_height);
-	mlx_put_image_to_window(game->mlx, game->win, game->player.img[idx],
-		x * game->img_width, y * game->img_height);
+// 	mlx_put_image_to_window(game->mlx, game->win, game->player.player_left[idx],
+// 		x * game->img_width, y * game->img_height);
 	game->count_move += 1;
 	count = ft_itoa(game->count_move);
 	ft_printf("number of movements : %d\n", game->count_move);

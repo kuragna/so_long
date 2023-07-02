@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 19:25:49 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/02 18:54:16 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	check_character(t_game *game)
 		{
 			if (map[y][x] != 'E' && map[y][x] != 'P' &&
 					map[y][x] != 'C' && map[y][x] != '0' && map[y][x] != '1')
-				return (1);
+				return (FALSE);
 			if (map[y][x] == CHAR_E)
 				game->count[0]++;
 			else if (map[y][x] == CHAR_P)
@@ -37,6 +37,6 @@ int	check_character(t_game *game)
 		}
 	}
 	if (game->count[0] != 1 || game->count[1] != 1 || game->count[2] < 1)
-		return (1);
-	return (0);
+		return (FALSE);
+	return (TRUE);
 }

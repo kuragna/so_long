@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 17:36:52 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 19:29:49 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/02 19:01:27 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,18 @@ int	check_path(t_game *game)
 	count = game->count[2];
 	map = map_dup(game->map, game->col_len);
 	if (!map)
-		return (1);
+		return (FALSE);
 	check_collectible_path(map, x, y, &count);
 	ft_free(map);
 	if (count > 0)
-		return (1);
+		return (FALSE);
 	map = map_dup(game->map, game->col_len);
 	if (!map)
-		return (1);
+		return (FALSE);
 	count = 1;
 	check_exit_path(map, x, y, &count);
 	if (count > 0)
-		return (1);
+		return (FALSE);
 	ft_free(map);
-	return (0);
+	return (TRUE);
 }
