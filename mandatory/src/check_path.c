@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/so_long.h"
+#include "../../include/so_long.h"
 
 static void	check_collectible_path(char **map, int x, int y, int *count)
 {

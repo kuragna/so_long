@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/so_long.h"
+#include "../../include/so_long.h"
 
 static int	get_map_size(const char *file_path)
 {

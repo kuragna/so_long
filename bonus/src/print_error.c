@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_game.c                                        :+:      :+:    :+:   */
+/*   print_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/26 17:53:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/30 16:10:26 by aabourri         ###   ########.fr       */
+/*   Created: 2023/07/03 17:31:41 by aabourri          #+#    #+#             */
+/*   Updated: 2023/07/03 19:16:31 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/so_long.h"
+#include "../../include/so_long.h"
 
-void	free_game(t_game *game)
+// TODO: test memory leaks after call exit()
+void	print_error(t_game *game, const char *err_msg)
 {
-	if (game->map != NULL)
-		ft_free(game->map);
-	game->map = NULL;
-	if (game != NULL)
-		free(game);
-	game = NULL;
+	(void)game;
+	ft_putendl_fd((char *)err_msg, STDERR);
+	exit(EXIT_FAILURE);
 }

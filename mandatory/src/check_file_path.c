@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_dup.c                                          :+:      :+:    :+:   */
+/*   check_file_path.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/26 17:53:45 by aabourri          #+#    #+#             */
-/*   Updated: 2023/06/27 17:20:33 by aabourri         ###   ########.fr       */
+/*   Created: 2023/06/22 15:18:31 by aabourri          #+#    #+#             */
+/*   Updated: 2023/07/02 18:59:00 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/so_long.h"
+#include "../../include/so_long.h"
 
-char	**map_dup(char **map, size_t size)
+int	check_file_path(const char *file_path)
 {
-	char	**tmp;
-	size_t	i;
-
-	i = 0;
-	tmp = malloc(sizeof(char *) * (size + 1));
-	if (!tmp)
-		return (NULL);
-	while (map[i])
+	if (ft_strnstr(file_path, "maps", ft_strlen(file_path)))
 	{
-		tmp[i] = ft_strdup(map[i]);
-		i++;
+		file_path = ft_strrchr(file_path, '.');
+		if (file_path == NULL || ft_strncmp(file_path, ".ber", 4) == 0)
+			return (TRUE);
 	}
-	tmp[i] = NULL;
-	return (tmp);
+	return (FALSE);
 }

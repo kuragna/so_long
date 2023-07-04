@@ -6,37 +6,41 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/02 18:54:16 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/04 18:36:52 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/so_long.h"
+#include "../../include/so_long.h"
+
+static int	is_char(int c)
+{
+	if (c == CHAR_E || c == CHAR_C || c == CHAR_P
+		|| c == CHAR_N || c == CHAR_0 || c == CHAR_1)
+		return (TRUE);
+	return (FALSE);
+}
 
 int	check_character(t_game *game)
 {
-	char	**map;
+	char	*map;
 	int		y;
-	int		x;
 
 	y = 0;
-	map = game->map;
 	while (++y < game->col_len - 1)
 	{
-		x = 0;
-		while (++x < game->row_len)
+		map = game->map[y];
+		while (*map && *map != '\n')
 		{
-			if (map[y][x] != 'E' && map[y][x] != 'P' &&
-					map[y][x] != 'C' && map[y][x] != '0' && map[y][x] != '1')
+			if (!is_char(*map))
 				return (FALSE);
-			if (map[y][x] == CHAR_E)
+			if (*map == CHAR_E)
 				game->count[0]++;
-			else if (map[y][x] == CHAR_P)
+			else if (*map == CHAR_P)
 				game->count[1]++;
-			else if (map[y][x] == CHAR_C)
+			else if (*map == CHAR_C)
 				game->count[2]++;
+			map++;
 		}
 	}
-	if (game->count[0] != 1 || game->count[1] != 1 || game->count[2] < 1)
-		return (FALSE);
-	return (TRUE);
+	return (game->count[0] == 1 && game->count[1] == 1 && game->count[2] >= 1);
 }
