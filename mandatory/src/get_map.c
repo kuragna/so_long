@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:05:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/02 18:59:46 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:24:08 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	get_map(t_game *game, const char *file_path)
 	{
 		game->map[i] = get_next_line(fd);
 		if (!game->map[i])
-			return (1);
+			return (FALSE);
 		i += 1;
 	}
 	game->row_len = (ft_strlen(game->map[0]) - 1);

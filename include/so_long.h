@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 16:57:24 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 11:52:17 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ typedef struct s_pos
 typedef struct s_player
 {
 	int		flag;
-	void	*img_left[3];
-	void	*img_down[3];
-	void	*img_up[3];
-	void	*img_right[3];
+	void	*imgs_left[3];
+	void	*imgs_down[3];
+	void	*imgs_up[3];
+	void	*imgs_right[3];
 	t_pos	pos;
 }	t_player;
 
@@ -53,12 +53,13 @@ typedef struct s_game
 {
 	int			row_len;
 	int			col_len;
-	int			count[3];
 	int			count_move;
 	int			img_width;
 	int			img_height;
 	int			screen_width;
 	int			screen_height;
+	int			count[3];
+	int			end;
 	void		*mlx;
 	void		*win;
 	void		*wall;
@@ -116,13 +117,15 @@ int		check_path(t_game *game);
 void	print_map(char **lines);
 void	free_game(t_game *game);
 void	render_game(t_game *game);
-void	update_player(t_game *game);
+void	update_player(t_game *game, void **imgs);
 void	get_pos(char **map, t_pos *player, t_pos *exit);
 void	start_game(t_game *game);
 void	print_error(t_game *game, const char *err_msg);
 void	put_image(t_game *game, void *img, int x, int y);
 int		key_hook(int keycode, t_game *game);
 int		close_win(t_game *game);
+
+/* Bonus part*/
 int		animate_enemy(t_game *game);
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_game.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 13:33:11 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 17:53:07 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:44:11 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	render_game(t_game *game)
 		x = -1;
 		while (++x < (game->screen_width / game->img_width))
 		{
-			put_image(game, game->space, x, y);
+			if (game->map[y][x] != CHAR_1)
+				put_image(game, game->space, x, y);
 			if (game->map[y][x] == CHAR_1)
 				put_image(game, game->wall, x, y);
 			if (game->map[y][x] == CHAR_C)
@@ -32,7 +33,7 @@ void	render_game(t_game *game)
 				put_image(game, game->enemy.imgs[0], x, y);
 		}
 	}
-	put_image(game, game->player.img_up[0],
+	put_image(game, game->player.imgs_up[0],
 		game->player.pos.x, game->player.pos.y);
 	put_image(game, game->exit, game->exit_pos.x, game->exit_pos.y);
 }

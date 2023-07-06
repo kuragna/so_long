@@ -6,11 +6,15 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 17:46:08 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 20:03:15 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
+
+// TODO: make thee user lose when touch enemy
+// TODO: refator key_hook function
+// TODO: free memory
 
 void	find_leaks(void)
 {
@@ -24,19 +28,24 @@ t_game	*game_init(void)
 
 	size = sizeof(*game);
 	game = malloc(size);
+	if (game == NULL)
+		exit(EXIT_FAILURE);
 	ft_memset(game, 0, size);
 	return (game);
 }
 
 void	put_image(t_game *game, void *img, int x, int y)
 {
-	mlx_put_image_to_window(game->mlx, game->win, img,
-			x * game->img_width, y * game->img_height);	
+	mlx_put_image_to_window(
+		game->mlx,
+		game->win,
+		img,
+		x * game->img_width,
+		y * game->img_height);
 }
 
 int	main(int argc, char **argv)
 {
-// 	atexit(find_leaks);
 	const char	*file_path = argv[1];
 	t_game		*game;
 
@@ -53,10 +62,8 @@ int	main(int argc, char **argv)
 	if (!check_character(game))
 		print_error(game, "Error: The map has wrong character");
 	get_pos(game->map, &game->player.pos, &game->exit_pos);
+	if (!check_path(game))
+		print_error(game, "Error: The map has invalid path");
 	start_game(game);
-
-// 	if (!check_path(game))
-// 		print_error(game, "Error: The map has invalid path");
-// 	start_game(game);
 	return (0);
 }

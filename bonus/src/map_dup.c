@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   animate_enemy.c                                    :+:      :+:    :+:   */
+/*   map_dup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/03 17:34:45 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 18:20:50 by aabourri         ###   ########.fr       */
+/*   Created: 2023/06/26 17:53:45 by aabourri          #+#    #+#             */
+/*   Updated: 2023/07/06 15:41:44 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
 
-int	animate_enemy(t_game *game)
+char	**map_dup(char **map, size_t size)
 {
-	if (game->enemy.count == 2500)
+	char	**tmp;
+	size_t	i;
+
+	i = 0;
+	tmp = malloc(sizeof(char *) * (size + 1));
+	if (!tmp)
+		return (NULL);
+	while (map[i])
 	{
-		if (game->enemy.flag == 4)
-			game->enemy.flag = 0;
-		game->enemy.flag += 1;
-		game->enemy.count = 0;
+		tmp[i] = ft_strdup(map[i]);
+		if (!tmp[i])
+			return (NULL);
+		i++;
 	}
-	game->enemy.count += 1;
-	return (0);
+	tmp[i] = NULL;
+	return (tmp);
 }

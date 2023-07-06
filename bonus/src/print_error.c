@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:31:41 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/03 19:16:31 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 20:02:20 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 // TODO: test memory leaks after call exit()
 void	print_error(t_game *game, const char *err_msg)
 {
-	(void)game;
 	ft_putendl_fd((char *)err_msg, STDERR);
+	if (game->col_len > 0)
+		ft_free(game->map);
+	if (game)
+		free(game);
 	exit(EXIT_FAILURE);
 }

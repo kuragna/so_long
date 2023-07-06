@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:31:41 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 17:36:53 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:56:55 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 // TODO: test memory leaks after call exit()
 void	print_error(t_game *game, const char *err_msg)
 {
-	(void)game;
 	ft_putendl_fd((char *)err_msg, STDERR);
+	if (game->col_len > 0)
+		ft_free(game->map);
+	free(game);
 	exit(EXIT_FAILURE);
 }

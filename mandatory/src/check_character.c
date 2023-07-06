@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_c_e_p.c                                      :+:      :+:    :+:   */
+/*   check_character.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 18:37:36 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:47:46 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ int	check_character(t_game *game)
 			if (!is_char(*line))
 				return (FALSE);
 			if (*line == CHAR_E)
-				game->count[0]++;
+				game->count[0] += 1;
 			else if (*line == CHAR_P)
-				game->count[1]++;
+				game->count[1] += 1;
 			else if (*line == CHAR_C)
-				game->count[2]++;
+				game->count[2] += 1;
 			line++;
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 17:36:52 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/05 13:48:31 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:33:15 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,17 @@ static void	check_collectible_path(char **map, int x, int y, int *count)
 	if (map[y][x] == CHAR_C)
 		*count -= 1;
 	map[y][x] = CHAR_1;
-	if (map[y][x - 1] != CHAR_1 && map[y][x - 1] != CHAR_E)
+	if (map[y][x - 1] != CHAR_1 && map[y][x - 1] != CHAR_E
+		&& map[y][x - 1] != CHAR_N)
 		check_collectible_path(map, x - 1, y, count);
-	if (map[y + 1][x] != CHAR_1 && map[y + 1][x] != CHAR_E)
+	if (map[y + 1][x] != CHAR_1 && map[y + 1][x] != CHAR_E
+		&& map[y + 1][x] != CHAR_N)
 		check_collectible_path(map, x, y + 1, count);
-	if (map[y][x + 1] != CHAR_1 && map[y][x + 1] != CHAR_E)
+	if (map[y][x + 1] != CHAR_1 && map[y][x + 1] != CHAR_E
+		&& map[y][x + 1] != CHAR_N)
 		check_collectible_path(map, x + 1, y, count);
-	if (map[y - 1][x] != CHAR_1 && map[y - 1][x] != CHAR_E)
+	if (map[y - 1][x] != CHAR_1 && map[y - 1][x] != CHAR_E
+		&& map[y - 1][x] != CHAR_N)
 		check_collectible_path(map, x, y - 1, count);
 }
 
@@ -36,13 +40,13 @@ static void	check_exit_path(char **map, int x, int y, int *count)
 	if (map[y][x] == CHAR_E)
 		*count -= 1;
 	map[y][x] = CHAR_1;
-	if (map[y][x - 1] != CHAR_1)
+	if (map[y][x - 1] != CHAR_1 && map[y][x - 1] != CHAR_N)
 		check_exit_path(map, x - 1, y, count);
-	if (map[y + 1][x] != CHAR_1)
+	if (map[y + 1][x] != CHAR_1 && map[y + 1][x] != CHAR_N)
 		check_exit_path(map, x, y + 1, count);
-	if (map[y][x + 1] != CHAR_1)
+	if (map[y][x + 1] != CHAR_1 && map[y][x + 1] != CHAR_N)
 		check_exit_path(map, x + 1, y, count);
-	if (map[y - 1][x] != CHAR_1)
+	if (map[y - 1][x] != CHAR_1 && map[y - 1][x] != CHAR_N)
 		check_exit_path(map, x, y - 1, count);
 }
 

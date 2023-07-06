@@ -6,15 +6,20 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 18:36:12 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:58:15 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
 
+// DONE: empty line before map
+// DONE: The map must be rectangular.
+// TODO: finish the map if player cross to exit and collectible is 0
+// TODO: check file map if doesnt have permision
+
 void	find_leaks(void)
 {
-	system("leaks -q so_long");
+	//system("leaks -q so_long");
 }
 
 t_game	*game_init(void)
@@ -24,14 +29,20 @@ t_game	*game_init(void)
 
 	size = sizeof(*game);
 	game = malloc(size);
+	if (game == NULL)
+		exit(EXIT_FAILURE);
 	ft_memset(game, 0, size);
 	return (game);
 }
 
 void	put_image(t_game *game, void *img, int x, int y)
 {
-	mlx_put_image_to_window(game->mlx, game->win, img,
-			x * game->img_width, y * game->img_height);	
+	mlx_put_image_to_window(
+		game->mlx,
+		game->win,
+		img,
+		x * game->img_width,
+		y * game->img_height);
 }
 
 int	main(int argc, char **argv)
