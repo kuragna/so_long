@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 13:33:11 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 11:52:26 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/07 19:17:33 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	render_game(t_game *game)
 {
-	int	y;
-	int	x;
+	const t_pos	pos = game->player.pos;
+	int			y;
+	int			x;
 
 	y = -1;
 	while (++y < (game->screen_height / game->img_height))
@@ -33,7 +34,6 @@ void	render_game(t_game *game)
 				put_image(game, game->enemy.imgs[0], x, y);
 		}	
 	}
-	put_image(game, game->player.imgs_up[0],
-		game->player.pos.x, game->player.pos.y);
+	put_image(game, game->player.imgs_up[0], pos.x, pos.y);
 	put_image(game, game->exit, game->exit_pos.x, game->exit_pos.y);
 }

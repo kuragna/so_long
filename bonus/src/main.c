@@ -6,32 +6,15 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 20:03:15 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/07 19:45:06 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
 
-// TODO: make thee user lose when touch enemy
-// TODO: refator key_hook function
-// TODO: free memory
-
 void	find_leaks(void)
 {
 	system("leaks -q so_long");
-}
-
-t_game	*game_init(void)
-{
-	t_game	*game;
-	size_t	size;
-
-	size = sizeof(*game);
-	game = malloc(size);
-	if (game == NULL)
-		exit(EXIT_FAILURE);
-	ft_memset(game, 0, size);
-	return (game);
 }
 
 void	put_image(t_game *game, void *img, int x, int y)
@@ -47,23 +30,24 @@ void	put_image(t_game *game, void *img, int x, int y)
 int	main(int argc, char **argv)
 {
 	const char	*file_path = argv[1];
-	t_game		*game;
+	t_game		game;
 
 	if (argc != 2 || !check_file_path(file_path))
 	{
 		ft_putendl_fd("usage: so_long/file_name.ber", STDERR);
 		return (1);
 	}
-	game = game_init();
-	if (!get_map(game, file_path))
-		print_error(game, "Error: Could not read the map");
-	if (game->map[0] == NULL || !check_walls(game))
-		print_error(game, "Error: The map has invalid wall");
-	if (!check_character(game))
-		print_error(game, "Error: The map has wrong character");
-	get_pos(game->map, &game->player.pos, &game->exit_pos);
-	if (!check_path(game))
-		print_error(game, "Error: The map has invalid path");
-	start_game(game);
+	ft_bzero(&game, sizeof(game));
+	if (!get_map(&game, file_path))
+		print_error(game.map, "Error: Could not read the map");
+	if (game.map[0] == NULL || !check_walls(game.map, game.col_len,
+			game.row_len))
+		print_error(game.map, "Error: The map has invalid wall");
+	if (!check_character(game.map, &game.count))
+		print_error(game.map, "Error: The map has wrong character");
+	get_pos(game.map, &game.player.pos, &game.exit_pos);
+	if (!check_player_path(&game))
+		print_error(game.map, "Error: The map has invalid path");
+	start_game(&game);
 	return (0);
 }

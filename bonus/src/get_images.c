@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:03:37 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 15:39:07 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/06 20:45:51 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	*get_image(t_game *game, const char *path_name)
 			&game->img_width, &game->img_height);
 	if (img == NULL)
 	{
-		print_error(game, "Error: Load img failed");
+		print_error(game->map, "Error: Load img failed");
 	}
 	return (img);
 }

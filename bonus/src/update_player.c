@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 13:31:15 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 11:58:11 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/07 18:08:25 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	update_player(t_game *game, void **imgs)
 	if (game->map[y][x] == CHAR_C)
 	{
 		game->map[y][x] = CHAR_0;
-		game->count[2] -= 1;
+		game->count -= 1;
 	}
 	put_image(game, game->space, x, y);
 	game->count_move += 1;
