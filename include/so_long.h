@@ -6,25 +6,26 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/07 19:31:35 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/14 14:07:43 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include <stdio.h>
-# include <math.h>
 # include <errno.h>
 # include <mlx.h>
 # include <fcntl.h>
 # include <string.h>
 # include "../libft/libft.h"
+# include <stdio.h>
 
-# define TRUE 1
-# define FALSE 0
-# define BTN_LEFT 1
-# define STDERR 2
+# define TRUE (1)
+# define FALSE (0)
+# define BTN_LEFT (1)
+# define STDERR (2)
+# define WHITE (0xffffff)
+# define DARK (0x181818)
 
 typedef struct s_pos
 {
@@ -82,12 +83,6 @@ enum e_character
 	CHAR_N = 0x4e,
 };
 
-// 0 = left = A
-// 2 = right = D
-// 1 = down = S
-// 13 = up = W
-// 53 = exit = ESC
-
 enum e_keys
 {
 	KEY_A = 0x0,
@@ -97,34 +92,21 @@ enum e_keys
 	KEY_ESC = 0x35,
 };
 
-enum e_colors
-{
-	RED = 0xff0000,
-	GREEN = 0x00ff00,
-	BLUE = 0x0000ff,
-	DARK = 0x181818,
-	YELLOW = 0xfff26e,
-	WHITE = 0xffffff,
-};
-
 char	**map_dup(char **map, size_t size);
 void	get_images(t_game *game);
 int		get_map(t_game *game, const char *file_path);
 int		check_walls(char **map, int col_len, int row_len);
 int		check_file_path(const char *file_path);
-// int		check_character(t_game *game);
 int		check_character(char **map, int *count);
 int		check_player_path(t_game *game);
-void	print_map(char **lines);
-void	free_game(t_game *game);
 void	render_game(t_game *game);
 void	update_player(t_game *game, void **imgs);
 void	get_pos(char **map, t_pos *player, t_pos *exit);
 void	start_game(t_game *game);
 void	print_error(char **map, const char *err_msg);
 void	put_image(t_game *game, void *img, int x, int y);
+void	fill_screen(t_game *game, const char *str);
 int		key_hook(int keycode, t_game *game);
 int		animate_enemy(t_game *game);
-
 
 #endif // SO_LONG

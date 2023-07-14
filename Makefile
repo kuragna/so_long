@@ -1,6 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: aabourri <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/07/11 13:09:02 by aabourri          #+#    #+#              #
+#    Updated: 2023/07/14 13:57:28 by aabourri         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		= so_long
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra -g3 -lmlx -framework OpenGL -framework AppKit -fsanitize=address
+CFLAGS		= -Wall -Werror -Wextra
+MLX_FLAGS 	= -lmlx -framework OpenGL -framework AppKit
 RM			= rm -fr
 SRC			= main.c \
 			  check_character.c \
@@ -15,12 +28,16 @@ SRC			= main.c \
 			  start_game.c \
 			  map_dup.c \
 			  print_error.c \
+			  fill_screen.c \
 
-SRC_BONUS	= $(SRC) animate_enemy.c 
+SRC_BONUS	= $(addsuffix _bonus.c, $(basename .c, $(SRC))) animate_enemy_bonus.c
+
+OBJS		= $(SRC:.c=.o)
+OBJS_BONUS	= $(SRC_BONUS:.c=.o)
 
 SRC_BONUS 	:= $(addprefix bonus/src/, $(SRC_BONUS))
-
 SRC			:= $(addprefix mandatory/src/, $(SRC))
+
 
 LIBFT		= ./libft/
 
@@ -31,14 +48,19 @@ all: $(LIB) $(NAME)
 $(LIB):
 	make -C $(LIBFT)
 
-bonus: $(SRC_BONUS) $(LIB)
-	$(CC) -o $(NAME) $(CFLAGS) $^ $(LIB)
+bonus: $(LIB)
+	@make "SRC=$(SRC_BONUS)"
 
-$(NAME): $(SRC)
-	$(CC) -o $@ $(CFLAGS) $^ $(LIB)
-clean:
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(NAME): $(OBJS) 
+	$(CC) -o $@ $(OBJS) $(MLX_FLAGS) $(LIB)
+clean: 
 	make clean -C $(LIBFT)
-fclean:
+	$(RM) $(OBJS)
+	$(RM) $(OBJS_BONUS)
+fclean: clean
 	make fclean -C $(LIBFT)
 	$(RM) $(NAME)
 re: fclean all

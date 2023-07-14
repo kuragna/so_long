@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 11:25:19 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 19:21:37 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:54:42 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static void	update_enemy(t_game *game, int flag)
 
 int	animate_enemy(t_game *game)
 {
+	if (game->end == TRUE)
+		return (0);
 	if (game->enemy.count == 2500)
 	{
 		if (game->enemy.flag == 4)

@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:03:37 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 20:45:51 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/14 14:13:26 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ static void	get_enemy_images(t_game *game)
 	t_enemy	*enemy;
 
 	enemy = &game->enemy;
-	enemy->imgs[0] = get_image(game, "./textures/fire_1.xpm");
-	enemy->imgs[1] = get_image(game, "./textures/fire_2.xpm");
-	enemy->imgs[2] = get_image(game, "./textures/fire_3.xpm");
-	enemy->imgs[3] = get_image(game, "./textures/fire_4.xpm");
+	enemy->imgs[0] = get_image(game, "./textures/bonus/fire_1.xpm");
+	enemy->imgs[1] = get_image(game, "./textures/bonus/fire_2.xpm");
+	enemy->imgs[2] = get_image(game, "./textures/bonus/fire_3.xpm");
+	enemy->imgs[3] = get_image(game, "./textures/bonus/fire_4.xpm");
 }
 
 static void	get_player_images(t_game *game)

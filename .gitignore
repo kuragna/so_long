@@ -1,4 +1,5 @@
 main
+so_long
 .gitignore
 *.vscode
 *.o
@@ -6,3 +7,4 @@ main
 *.sh
 *.swap
 *.swo
+*.a

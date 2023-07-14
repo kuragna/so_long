@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:03:37 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/06 20:30:52 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/14 14:11:43 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ static void	*get_image(t_game *game, const char *path_name)
 		print_error(game->map, "Error: Load img failed");
 	}
 	return (img);
-}
-
-static void	get_enemy_images(t_game *game)
-{
-	t_enemy	*enemy;
-
-	enemy = &game->enemy;
-	enemy->imgs[0] = get_image(game, "./textures/fire_1.xpm");
-	enemy->imgs[1] = get_image(game, "./textures/fire_2.xpm");
-	enemy->imgs[2] = get_image(game, "./textures/fire_3.xpm");
-	enemy->imgs[3] = get_image(game, "./textures/fire_4.xpm");
 }
 
 static void	get_player_images(t_game *game)
@@ -58,7 +47,6 @@ static void	get_player_images(t_game *game)
 void	get_images(t_game *game)
 {
 	get_player_images(game);
-	get_enemy_images(game);
 	game->space = get_image(game, "./textures/space.xpm");
 	game->wall = get_image(game, "./textures/wall.xpm");
 	game->collectible = get_image(game, "./textures/Cherry.xpm");

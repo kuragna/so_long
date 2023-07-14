@@ -6,13 +6,11 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:29:04 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/07 20:11:24 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:53:58 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
-
-void	finish_game(t_game *game);
 
 static int	ft_close(void)
 {
@@ -31,8 +29,10 @@ static void	move_up_down(int keycode, t_game *game)
 			return ;
 		put_image(game, game->space, pos->x, pos->y--);
 		update_player(game, game->player.imgs_up);
+		if (game->map[pos->y][pos->x] == CHAR_N)
+			fill_screen(game, "Game Over!");
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 	if (keycode == KEY_S && game->map[pos->y + 1][pos->x] != CHAR_1)
 	{
@@ -40,30 +40,11 @@ static void	move_up_down(int keycode, t_game *game)
 			return ;
 		put_image(game, game->space, pos->x, pos->y++);
 		update_player(game, game->player.imgs_down);
+		if (game->map[pos->y][pos->x] == CHAR_N)
+			fill_screen(game, "Game Over!");
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
-}
-
-void	fill_screen(t_game *game, const char *str)
-{
-	int	y;
-	int	x;
-
-	y = -1;
-	while (y < game->screen_height)
-	{
-		x = -1;
-		while (x < game->screen_width)
-		{
-			mlx_pixel_put(game->mlx, game->win, x, y, DARK);
-			x++;
-		}
-		y++;
-	}
-	game->end = TRUE;
-	mlx_string_put(game->mlx, game->win, game->screen_width / 2,
-		game->screen_height / 2, WHITE, (char *)str);
 }
 
 static void	move_left_right(int keycode, t_game *game)
@@ -77,8 +58,10 @@ static void	move_left_right(int keycode, t_game *game)
 			return ;
 		put_image(game, game->space, pos->x--, pos->y);
 		update_player(game, game->player.imgs_left);
+		if (game->map[pos->y][pos->x] == CHAR_N)
+			fill_screen(game, "Game Over!");
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 	if (keycode == KEY_D && game->map[pos->y][pos->x + 1] != CHAR_1)
 	{
@@ -86,15 +69,15 @@ static void	move_left_right(int keycode, t_game *game)
 			return ;
 		put_image(game, game->space, pos->x++, pos->y);
 		update_player(game, game->player.imgs_right);
+		if (game->map[pos->y][pos->x] == CHAR_N)
+			fill_screen(game, "Game Over!");
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 }
 
 int	key_hook(int keycode, t_game *game)
 {
-	if (game->map[game->player.pos.y][game->player.pos.x] == CHAR_N)
-		game->end = TRUE;
 	if (keycode == KEY_ESC)
 		exit(EXIT_SUCCESS);
 	if (game->end == TRUE)

@@ -6,7 +6,7 @@
 /*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:29:04 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/07 19:23:42 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:56:56 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	move_up_down(int keycode, t_game *game)
 		put_image(game, game->space, pos->x, pos->y--);
 		update_player(game, game->player.imgs_up);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 	if (keycode == KEY_S && game->map[pos->y + 1][pos->x] != CHAR_1)
 	{
@@ -39,7 +39,7 @@ static void	move_up_down(int keycode, t_game *game)
 		put_image(game, game->space, pos->x, pos->y++);
 		update_player(game, game->player.imgs_down);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 }
 
@@ -55,7 +55,7 @@ static void	move_left_right(int keycode, t_game *game)
 		put_image(game, game->space, pos->x--, pos->y);
 		update_player(game, game->player.imgs_left);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 	if (keycode == KEY_D && game->map[pos->y][pos->x + 1] != CHAR_1)
 	{
@@ -64,7 +64,7 @@ static void	move_left_right(int keycode, t_game *game)
 		put_image(game, game->space, pos->x++, pos->y);
 		update_player(game, game->player.imgs_right);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
-			game->end = TRUE;
+			fill_screen(game, "End of game");
 	}
 }
 
@@ -96,9 +96,7 @@ void	start_game(t_game *game)
 			game->screen_height,
 			"so_long");
 	if (game->win == NULL)
-	{
 		print_error(game->map, "Error: Could not create a window");
-	}
 	render_game(game);
 	mlx_key_hook(game->win, key_hook, game);
 	mlx_hook(game->win, 17, (1 << 17), ft_close, game);

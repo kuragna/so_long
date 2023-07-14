@@ -6,7 +6,7 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 17:36:52 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/07 19:04:11 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:20:33 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ static void	check_exit_path(char **map, int x, int y, int *count)
 		check_exit_path(map, x, y - 1, count);
 }
 
+static int	get_free(char **map)
+{
+	ft_free(map);
+	return (FALSE);
+}
+
 int	check_player_path(t_game *game)
 {
 	const int	x = game->player.pos.x;
@@ -64,14 +70,14 @@ int	check_player_path(t_game *game)
 	check_collectible_path(map, x, y, &count);
 	ft_free(map);
 	if (count > 0)
-		return (FALSE);
+		return (get_free(map));
 	map = map_dup(game->map, game->col_len);
 	if (!map)
 		return (FALSE);
 	count = 1;
 	check_exit_path(map, x, y, &count);
 	if (count > 0)
-		return (FALSE);
+		return (get_free(map));
 	ft_free(map);
 	return (TRUE);
 }
