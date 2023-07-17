@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_game.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:29:04 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/11 13:56:56 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/16 16:14:34 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	move_up_down(int keycode, t_game *game)
 	{
 		if (game->map[pos->y - 1][pos->x] == CHAR_E && game->count > 0)
 			return ;
-		put_image(game, game->space, pos->x, pos->y--);
+		put_image(game, game->imgs[SPACE], pos->x, pos->y--);
 		update_player(game, game->player.imgs_up);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
 			fill_screen(game, "End of game");
@@ -36,7 +36,7 @@ static void	move_up_down(int keycode, t_game *game)
 	{
 		if (game->map[pos->y + 1][pos->x] == CHAR_E && game->count > 0)
 			return ;
-		put_image(game, game->space, pos->x, pos->y++);
+		put_image(game, game->imgs[SPACE], pos->x, pos->y++);
 		update_player(game, game->player.imgs_down);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
 			fill_screen(game, "End of game");
@@ -52,7 +52,7 @@ static void	move_left_right(int keycode, t_game *game)
 	{
 		if (game->map[pos->y][pos->x - 1] == CHAR_E && game->count > 0)
 			return ;
-		put_image(game, game->space, pos->x--, pos->y);
+		put_image(game, game->imgs[SPACE], pos->x--, pos->y);
 		update_player(game, game->player.imgs_left);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
 			fill_screen(game, "End of game");
@@ -61,7 +61,7 @@ static void	move_left_right(int keycode, t_game *game)
 	{
 		if (game->map[pos->y][pos->x + 1] == CHAR_E && game->count > 0)
 			return ;
-		put_image(game, game->space, pos->x++, pos->y);
+		put_image(game, game->imgs[SPACE], pos->x++, pos->y);
 		update_player(game, game->player.imgs_right);
 		if (game->map[pos->y][pos->x] == CHAR_E && game->count == 0)
 			fill_screen(game, "End of game");

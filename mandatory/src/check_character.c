@@ -6,13 +6,13 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:00:30 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/07 19:35:42 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/16 14:45:23 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
 
-static int	is_char(int c)
+static int	so_long_char(int c)
 {
 	if (c == CHAR_E || c == CHAR_C || c == CHAR_P
 		|| c == CHAR_0 || c == CHAR_1)
@@ -33,7 +33,7 @@ int	check_character(char **map, int *count)
 		line = map[y];
 		while (*line && *line != '\n')
 		{
-			if (!is_char(*line))
+			if (!so_long_char(*line))
 				return (FALSE);
 			if (*line == CHAR_E || *line == CHAR_P)
 				count_ += 1;

@@ -6,12 +6,11 @@
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 17:10:46 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/14 14:07:27 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/17 18:58:51 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/so_long.h"
-#include <stdio.h>
 
 void	put_image(t_game *game, void *img, int x, int y)
 {
@@ -40,7 +39,7 @@ int	main(int argc, char **argv)
 		print_error(game.map, "Error: The map has invalid wall");
 	if (!check_character(game.map, &game.count))
 		print_error(game.map, "Error: The map has wrong character");
-	get_pos(game.map, &game.player.pos, &game.exit_pos);
+	get_pos(game.map, &game.player.pos);
 	if (!check_player_path(&game))
 		print_error(game.map, "Error: The map has invalid path");
 	start_game(&game);

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_pos.c                                          :+:      :+:    :+:   */
+/*   get_pos_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:54:13 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/04 13:27:43 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:04:14 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/so_long.h"
+#include "../../include/so_long_bonus.h"
 
-void	get_pos(char **map, t_pos *player, t_pos *exit)
+void	get_pos(char **map, t_pos *player)
 {
 	int	y;
 	int	x;
@@ -28,35 +28,6 @@ void	get_pos(char **map, t_pos *player, t_pos *exit)
 				player->x = x;
 				player->y = y;
 			}
-			if (map[y][x] == CHAR_E)
-			{
-				exit->x = x;
-				exit->y = y;
-			}
 		}
 	}
 }
-// void	get_pos(t_game *game)
-// {
-// 	int	y;
-// 	int	x;
-
-// 	y = 0;
-// 	while (++y < game->col_len - 1)
-// 	{
-// 		x = 0;
-// 		while (++x < game->row_len)
-// 		{
-// 			if (game->map[y][x] == CHAR_P)
-// 			{
-// 				game->player.pos.x = x;
-// 				game->player.pos.y = y;
-// 			}
-// 			else if (game->map[y][x] == CHAR_E)
-// 			{
-// 				game->exit_pos.x = x;
-// 				game->exit_pos.y = y;
-// 			}
-// 		}
-// 	}
-// }

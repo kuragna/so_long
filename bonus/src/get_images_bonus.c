@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_images.c                                       :+:      :+:    :+:   */
+/*   get_images_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:03:37 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/14 14:13:26 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:03:59 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/so_long.h"
+#include "../../include/so_long_bonus.h"
 
 static void	*get_image(t_game *game, const char *path_name)
 {
@@ -59,8 +59,8 @@ void	get_images(t_game *game)
 {
 	get_player_images(game);
 	get_enemy_images(game);
-	game->space = get_image(game, "./textures/space.xpm");
-	game->wall = get_image(game, "./textures/wall.xpm");
-	game->collectible = get_image(game, "./textures/Cherry.xpm");
-	game->exit = get_image(game, "./textures/exit.xpm");
+	game->imgs[SPACE] = get_image(game, "./textures/space.xpm");
+	game->imgs[WALL] = get_image(game, "./textures/wall.xpm");
+	game->imgs[COLLECTIBLE] = get_image(game, "./textures/Cherry.xpm");
+	game->imgs[EXIT] = get_image(game, "./textures/exit.xpm");
 }

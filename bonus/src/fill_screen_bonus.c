@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fill_screen.c                                      :+:      :+:    :+:   */
+/*   fill_screen_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 13:57:16 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/11 13:57:41 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:03:51 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/so_long.h"
+#include "../../include/so_long_bonus.h"
 
 void	fill_screen(t_game *game, const char *str)
 {

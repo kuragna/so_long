@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   animate_enemy.c                                    :+:      :+:    :+:   */
+/*   animate_enemy_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 11:25:19 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/11 13:54:42 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:03:10 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/so_long.h"
+#include "../../include/so_long_bonus.h"
 
 static void	update_enemy(t_game *game, int flag)
 {

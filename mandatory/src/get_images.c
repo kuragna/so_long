@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_images.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:03:37 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/14 14:11:43 by aabourri         ###   ########.fr       */
+/*   Updated: 2023/07/16 16:12:17 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static void	get_player_images(t_game *game)
 void	get_images(t_game *game)
 {
 	get_player_images(game);
-	game->space = get_image(game, "./textures/space.xpm");
-	game->wall = get_image(game, "./textures/wall.xpm");
-	game->collectible = get_image(game, "./textures/Cherry.xpm");
-	game->exit = get_image(game, "./textures/exit.xpm");
+	game->imgs[SPACE] = get_image(game, "./textures/space.xpm");
+	game->imgs[WALL] = get_image(game, "./textures/wall.xpm");
+	game->imgs[COLLECTIBLE] = get_image(game, "./textures/Cherry.xpm");
+	game->imgs[EXIT] = get_image(game, "./textures/exit.xpm");
 }

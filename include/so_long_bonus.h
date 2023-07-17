@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
+/*   so_long_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabourri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 17:09:26 by aabourri          #+#    #+#             */
-/*   Updated: 2023/07/17 19:05:16 by aabourri         ###   ########.fr       */
+/*   Created: 2023/07/17 19:15:38 by aabourri          #+#    #+#             */
+/*   Updated: 2023/07/17 19:15:55 by aabourri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef SO_LONG_BONUS_H
+# define SO_LONG_BONUS_H
 
 # include <errno.h>
 # include <mlx.h>
@@ -42,6 +42,13 @@ typedef struct s_player
 	t_pos	pos;
 }	t_player;
 
+typedef struct s_enemy
+{
+	int		flag;
+	int		count;
+	void	*imgs[4];
+}	t_enemy;
+
 typedef struct s_game
 {
 	int			row_len;
@@ -58,6 +65,7 @@ typedef struct s_game
 	void		*imgs[4];
 	char		**map;
 	t_player	player;
+	t_enemy		enemy;
 }	t_game;
 
 enum e_character
@@ -67,6 +75,7 @@ enum e_character
 	CHAR_E = 0x45,
 	CHAR_0 = 0x30,
 	CHAR_1 = 0x31,
+	CHAR_N = 0x4e,
 };
 
 enum e_keys
@@ -101,5 +110,6 @@ void	print_error(char **map, const char *err_msg);
 void	put_image(t_game *game, void *img, int x, int y);
 void	fill_screen(t_game *game, const char *str);
 int		key_hook(int keycode, t_game *game);
+int		animate_enemy(t_game *game);
 
-#endif // SO_LONG
+#endif // SO_LONG_BONUS

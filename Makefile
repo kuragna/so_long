@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabourri <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: aabourri <aabourri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/11 13:09:02 by aabourri          #+#    #+#              #
-#    Updated: 2023/07/14 13:57:28 by aabourri         ###   ########.fr        #
+#    Updated: 2023/07/17 18:57:15 by aabourri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= so_long
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra
-MLX_FLAGS 	= -lmlx -framework OpenGL -framework AppKit
+CFLAGS		= -g3 -Wall -Werror -Wextra 
+MLX_FLAGS 	= -lmlx -framework OpenGL -framework AppKit -fsanitize=address
 RM			= rm -fr
 SRC			= main.c \
 			  check_character.c \
