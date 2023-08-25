@@ -29,7 +29,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2 || !check_file_path(file_path))
 	{
-		ft_putendl_fd("usage: so_long/file_name.ber", STDERR);
+		ft_putendl_fd("Usage: ./so_long maps/file_name.ber", STDERR);
 		return (1);
 	}
 	ft_bzero(&game, sizeof(game));
